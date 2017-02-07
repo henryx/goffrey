@@ -7,8 +7,29 @@
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+	"strconv"
+	"ip"
+)
 
 func main() {
-	fmt.Println("Hello World!")
+	var cidr string
+
+	network := "192.168.0.0/255.255.255.252"
+	mask := strings.Split(network, "/")
+
+	if strings.Contains(mask[1], ".") {
+		cidr = strconv.Itoa(ip.ToCidr(mask[1]))
+	} else {
+		cidr = mask[1]
+	}
+
+	ips, err := ip.Range(mask[0] + "/" + cidr)
+	if err != nil {
+		fmt.Println("Errorr: " + err.Error())
+	}
+
+	fmt.Println(ips)
 }
