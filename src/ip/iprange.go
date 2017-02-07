@@ -6,3 +6,14 @@
 */
 
 package ip
+
+import "net"
+
+func ToCidr(mask string) int {
+	netmask := net.IPMask(net.ParseIP(mask).To4()) // If you have the mask as a string
+	//netmask := net.IPv4Mask(255,255,255,0) // If you have the mask as 4 integer values
+
+	prefix, _ := netmask.Size()
+	return prefix
+
+}
