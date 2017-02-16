@@ -14,7 +14,9 @@ import (
 	"ip"
 )
 
-func main() {
+
+
+func testcode() {
 	var cidr string
 
 	network := "192.168.0.0/255.255.255.252"
@@ -32,4 +34,8 @@ func main() {
 	}
 
 	fmt.Println(ips)
+}
+
+func main() {
+	testcode()
 }
