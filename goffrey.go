@@ -68,10 +68,10 @@ func contains(slice []string, element string) bool {
 func initargs() {
 	var help = `Usage: goffrey [-h|--help] <command> [options]
 	Global options are:
-	  -h, --help: Print this help
+	    -h, --help: Print this help
 	Commands are:
-	  add: Add network
-	  del: Delete network
+	    add: Add network
+	    del: Delete network
 	`
 	if len(os.Args) <= 1 || contains(os.Args, "-h") || contains(os.Args, "--help") {
 		fmt.Println(help)
