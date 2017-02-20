@@ -36,21 +36,30 @@ func testcode() {
 	fmt.Println(ips)
 }
 
-var (
-	action  string
-	section string
-)
+type Network struct {
+	Action  string
+	Section string
+	Network string
+	Mask    string
+}
 
-func addargs(args []string) {
-	action = "add"
+func addargs(args []string) Network {
+	data := Network{}
+	data.Action = "add"
+
 	addcommand := flag.NewFlagSet("add", flag.ExitOnError)
-	addcommand.StringVar(&section, "S", "", "Specify the section")
+	addcommand.StringVar(&data.Section, "S", "", "Specify the section")
+	addcommand.StringVar(&data.Section, "-section", "", "Specify the section")
+	addcommand.StringVar(&data.Network, "N", "", "Specify the network")
 
 	addcommand.Parse(args)
+
+	return data
 }
 
 func delargs(args []string) {
-	action = "del"
+	data := Network{}
+	data.Action = "del"
 
 	delcommand := flag.NewFlagSet("del", flag.ExitOnError)
 	delcommand.Parse(args)
