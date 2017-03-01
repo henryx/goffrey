@@ -12,7 +12,7 @@ import (
 	"fmt"
 )
 
-const help = `Usage: goffrey [-h|--help] <command> [options]
+const help = `Usage: goffrey [-h|--help] <command>
 	Global options are:
 	  -h, --help: Print this help
 	Commands are:
