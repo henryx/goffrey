@@ -7,6 +7,20 @@
 
 package args
 
-func helpargs(arg string) {
+import "fmt"
 
+const addcmd = `add <name> <network> <netmask>
+    Add a network. Parameters are:
+        <name>    - Specify a name for the network
+        <network> - Specify the network addresses
+        <netmask> - Specify the netmask
+`
+
+func helpargs(arg string) {
+	switch arg {
+	case "add":
+		fmt.Println(addcmd)
+	default:
+		fmt.Println("Unknown command: " + arg)
+	}
 }
