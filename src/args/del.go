@@ -7,6 +7,6 @@
 
 package args
 
-func delargs(args []string) {
+func delargs(res *Args, args []string) {
 
 }

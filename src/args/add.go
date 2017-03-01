@@ -8,6 +8,6 @@
 
 package args
 
-func addargs(args []string) {
+func addargs(res *Args, args []string) {
 
 }

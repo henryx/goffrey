@@ -21,6 +21,13 @@ const help = `Usage: goffrey [-h|--help] <command>
 	  del: Delete network
 `
 
+type Args struct {
+	Action  string
+	Name    string
+	Network string
+	Netmask string
+}
+
 func contains(slice []string, element string) bool {
 	for _, a := range slice {
 		if a == element {
@@ -31,6 +38,7 @@ func contains(slice []string, element string) bool {
 }
 
 func Init() {
+	res := Args{}
 	if len(os.Args) <= 1 || contains(os.Args, "-h") || contains(os.Args, "--help") {
 		fmt.Println(help)
 		os.Exit(0)
@@ -45,9 +53,11 @@ func Init() {
 		case "help":
 			helpargs(os.Args[2])
 		case "add":
-			addargs(os.Args[2:])
+			res.Action = "add"
+			addargs(&res, os.Args[2:])
 		case "del":
-			delargs(os.Args[2:])
+			res.Action = "del"
+			delargs(&res, os.Args[2:])
 		}
 	}
 }
