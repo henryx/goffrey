@@ -12,8 +12,7 @@ import (
 	"strings"
 	"strconv"
 	"ip"
-	"os"
-	"flag"
+	"args"
 )
 
 func testcode() {
@@ -41,52 +40,7 @@ var (
 	section string
 )
 
-func addargs(args []string) {
-	action = "add"
-	addcommand := flag.NewFlagSet("add", flag.ExitOnError)
-	addcommand.StringVar(&section, "S", "", "Specify the section")
-
-	addcommand.Parse(args)
-}
-
-func delargs(args []string) {
-	action = "del"
-
-	delcommand := flag.NewFlagSet("del", flag.ExitOnError)
-	delcommand.Parse(args)
-}
-
-func contains(slice []string, element string) bool {
-	for _, a := range slice {
-		if a == element {
-			return true
-		}
-	}
-	return false
-}
-
-func initargs() {
-	var help = `Usage: goffrey [-h|--help] <command> [options]
-	Global options are:
-	  -h, --help: Print this help
-	Commands are:
-	  add: Add network
-	  del: Delete network
-	`
-	if len(os.Args) <= 1 || contains(os.Args, "-h") || contains(os.Args, "--help") {
-		fmt.Println(help)
-		os.Exit(0)
-	} else {
-		switch os.Args[1] {
-		case "add":
-			addargs(os.Args[2:])
-		case "del":
-			delargs(os.Args[2:])
-		}
-	}
-}
-
 func main() {
 	testcode()
-	initargs()
+	args.Init()
 }
