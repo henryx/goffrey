@@ -35,11 +35,6 @@ func testcode() {
 	fmt.Println(ips)
 }
 
-var (
-	action  string
-	section string
-)
-
 func main() {
 	testcode()
 	args.Init()
