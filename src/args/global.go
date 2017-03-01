@@ -19,7 +19,7 @@ const help = `Usage: goffrey [-h|--help] <command>
 	  help: Print help of a command
 	  add: Add network
 	  del: Delete network
-	`
+`
 
 func contains(slice []string, element string) bool {
 	for _, a := range slice {
@@ -35,6 +35,12 @@ func Init() {
 		fmt.Println(help)
 		os.Exit(0)
 	} else {
+		if len(os.Args[2:]) <= 0 {
+			fmt.Println("Not enough parameters")
+			fmt.Println(help)
+			return
+		}
+
 		switch os.Args[1] {
 		case "help":
 			helpargs(os.Args[2])
