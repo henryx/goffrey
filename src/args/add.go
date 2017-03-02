@@ -16,10 +16,10 @@ import (
 func parseaddargs(res *Args, args []string) error {
 	res.Name = args[0]
 
-	if ok := net.ParseIP(args[0]); ok != nil {
+	if ok := net.ParseIP(args[1]); ok != nil {
 		res.Network = args[1]
 	} else {
-		return errors.New("IP address not valid: " + args[0])
+		return errors.New("Network is not valid: " + args[1])
 	}
 
 	cidr := ip.ToCidr(args[2])
