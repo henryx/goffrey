@@ -53,7 +53,9 @@ func Parse() (Args, error) {
 			parsehelpargs(os.Args[2])
 		case "add":
 			res.Action = "add"
-			parseaddargs(&res, os.Args[2:])
+			if err := parseaddargs(&res, os.Args[2:]); err != nil {
+				return Args{}, err
+			}
 		case "del":
 			res.Action = "del"
 			parsedelargs(&res, os.Args[2:])
