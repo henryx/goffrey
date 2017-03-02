@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"ip"
 	"args"
+	"os"
 )
 
 func testcode() {
@@ -37,5 +38,10 @@ func testcode() {
 
 func main() {
 	testcode()
-	args.Init()
+	act, err := args.Init()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println(act)
 }

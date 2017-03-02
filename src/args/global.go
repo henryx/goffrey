@@ -10,6 +10,7 @@ package args
 import (
 	"os"
 	"fmt"
+	"errors"
 )
 
 const help = `Usage: goffrey [-h|--help] <command>
@@ -37,16 +38,14 @@ func contains(slice []string, element string) bool {
 	return false
 }
 
-func Init() {
+func Init() (Args, error) {
 	res := Args{}
 	if len(os.Args) <= 1 || contains(os.Args, "-h") || contains(os.Args, "--help") {
 		fmt.Println(help)
 		os.Exit(0)
 	} else {
 		if len(os.Args[2:]) <= 0 {
-			fmt.Println("Not enough parameters")
-			fmt.Println(help)
-			return
+			return Args{}, errors.New("Not enough parameters (see \"-h\" option)")
 		}
 
 		switch os.Args[1] {
@@ -60,4 +59,6 @@ func Init() {
 			delargs(&res, os.Args[2:])
 		}
 	}
+
+	return res, nil
 }
