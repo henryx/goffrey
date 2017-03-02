@@ -7,6 +7,6 @@
 
 package args
 
-func delargs(res *Args, args []string) {
+func parsedelargs(res *Args, args []string) {
 
 }

@@ -16,7 +16,7 @@ const addcmd = `add <name> <network> <netmask>
         <netmask> - Specify the netmask
 `
 
-func helpargs(arg string) {
+func parsehelpargs(arg string) {
 	switch arg {
 	case "add":
 		fmt.Println(addcmd)

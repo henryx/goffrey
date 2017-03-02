@@ -38,7 +38,7 @@ func contains(slice []string, element string) bool {
 	return false
 }
 
-func Init() (Args, error) {
+func Parse() (Args, error) {
 	res := Args{}
 	if len(os.Args) <= 1 || contains(os.Args, "-h") || contains(os.Args, "--help") {
 		fmt.Println(help)
@@ -50,13 +50,13 @@ func Init() (Args, error) {
 
 		switch os.Args[1] {
 		case "help":
-			helpargs(os.Args[2])
+			parsehelpargs(os.Args[2])
 		case "add":
 			res.Action = "add"
-			addargs(&res, os.Args[2:])
+			parseaddargs(&res, os.Args[2:])
 		case "del":
 			res.Action = "del"
-			delargs(&res, os.Args[2:])
+			parsedelargs(&res, os.Args[2:])
 		}
 	}
 
