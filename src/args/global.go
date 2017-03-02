@@ -26,7 +26,7 @@ type Args struct {
 	Action  string
 	Name    string
 	Network string
-	Netmask string
+	Netmask int
 }
 
 func contains(slice []string, element string) bool {
