@@ -22,8 +22,12 @@ func parseaddargs(res *Args, args []string) error {
 		return errors.New("Network is not valid: " + args[1])
 	}
 
-	cidr := ip.ToCidr(args[2])
-	res.Netmask = cidr
+	if cidr := ip.ToCidr(args[2]); cidr != 0 {
+		res.Netmask = cidr
+	} else {
+		return errors.New("Netmask is not valid: " + args[2])
+
+	}
 
 	return nil
 }
