@@ -17,6 +17,7 @@ import (
 )
 
 func testcode() {
+	// TODO: remove it
 	var cidr string
 
 	network := "192.168.0.0/255.255.255.252"

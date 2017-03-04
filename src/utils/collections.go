@@ -5,7 +5,6 @@
    License       GPL version 2 (see GPL.txt for details)
 */
 
-
 package utils
 
 func IndexStr(slice []string, element string) (int) {
