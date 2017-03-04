@@ -17,3 +17,12 @@ func IndexStr(slice []string, element string) (int) {
 
 	return -1
 }
+
+func ContainStr(slice []string, element string) bool {
+	for _, a := range slice {
+		if a == element {
+			return true
+		}
+	}
+	return false
+}

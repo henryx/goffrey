@@ -11,6 +11,7 @@ import (
 	"os"
 	"fmt"
 	"errors"
+	"utils"
 )
 
 const help = `Usage: goffrey [-h|--help] <command>
@@ -29,18 +30,11 @@ type Args struct {
 	Netmask int
 }
 
-func contains(slice []string, element string) bool {
-	for _, a := range slice {
-		if a == element {
-			return true
-		}
-	}
-	return false
-}
+
 
 func Parse() (Args, error) {
 	res := Args{}
-	if len(os.Args) <= 1 || contains(os.Args, "-h") || contains(os.Args, "--help") {
+	if len(os.Args) <= 1 || utils.ContainStr(os.Args, "-h") || utils.ContainStr(os.Args, "--help") {
 		fmt.Println(help)
 		os.Exit(0)
 	} else {
