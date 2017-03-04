@@ -70,6 +70,8 @@ func Parse() (Args, error) {
 		case "del":
 			res.Action = "del"
 			parsedelargs(&res, os.Args[command+1:])
+		default:
+			return Args{}, errors.New("No command specified")
 		}
 	}
 
