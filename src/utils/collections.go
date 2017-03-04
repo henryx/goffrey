@@ -7,3 +7,13 @@
 
 
 package utils
+
+func IndexStr(slice []string, element string) (int) {
+	for pos, a := range slice {
+		if a == element {
+			return pos
+		}
+	}
+
+	return -1
+}
