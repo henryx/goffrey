@@ -16,6 +16,8 @@ import (
 
 const help = `Usage: goffrey [OPTIONS]... <COMMANDS>
 	Global options are:
+	  -c, --cfg CONF
+	      Use CONF as configuration file. Defaults are /etc/goffrey.cfg or ~/.goffreyrc
 	  -h, --help:
 	      Print this help and exit
 	Commands are:
@@ -28,6 +30,7 @@ const help = `Usage: goffrey [OPTIONS]... <COMMANDS>
 `
 
 type Args struct {
+	Config  string
 	Action  string
 	Name    string
 	Network string
@@ -44,6 +47,16 @@ func Parse() (Args, error) {
 	} else {
 		if len(os.Args[2:]) <= 0 {
 			return Args{}, errors.New("Not enough parameters (see \"-h\" option)")
+		}
+
+		if utils.ContainStr(os.Args, "-c") ||utils.ContainStr(os.Args, "--cfg") {
+			idx := -1
+			if idx = utils.IndexStr(os.Args, "-c"); idx != -1 {
+				command = idx + 1
+			} else {
+				idx = utils.IndexStr(os.Args, "--cfg")
+			}
+			res.Config = os.Args[idx + 1]
 		}
 
 		switch os.Args[command] {
