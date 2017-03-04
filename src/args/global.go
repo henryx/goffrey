@@ -14,13 +14,17 @@ import (
 	"utils"
 )
 
-const help = `Usage: goffrey [-h|--help] <command>
+const help = `Usage: goffrey [OPTIONS]... <COMMANDS>
 	Global options are:
-	  -h, --help: Print this help
+	  -h, --help:
+	      Print this help and exit
 	Commands are:
-	  help: Print help of a command
-	  add: Add network
-	  del: Delete network
+	  help:
+	      Print the help of a command
+	  add:
+	      Add a network
+	  del:
+	      Delete a network
 `
 
 type Args struct {
