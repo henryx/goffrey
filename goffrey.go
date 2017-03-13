@@ -12,8 +12,7 @@ import (
 	"strings"
 	"strconv"
 	"ip"
-	"args"
-	"os"
+	"github.com/cosiner/flag"
 )
 
 func testcode() {
@@ -37,12 +36,27 @@ func testcode() {
 	fmt.Println(ips)
 }
 
+type Args struct {
+	Cfg string `names:"-c, --cfg" usage:"Set configuration file"`
+	Add struct {
+		Enable  bool
+		Name    string `usage:"Set the name of the network"`
+		Network string `usage:"Set the network addresses"`
+		Netmask string `usage:"Set the network mask"`
+	} `usage:"Add a network"`
+	Del struct {
+		Enable bool
+		Name   string `usage:"Set the name of the network"`
+	} `usage:"Delete a network"`
+}
+
 func main() {
+	var args Args
 	testcode()
-	act, err := args.Parse()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println(act)
+
+	set := flag.NewFlagSet(flag.Flag{})
+	set.StructFlags(&args)
+	set.Parse()
+	fmt.Println(args.Add.Name)
+	set.Help(false)
 }
