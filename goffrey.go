@@ -40,13 +40,13 @@ type Args struct {
 	Cfg string `names:"-c, --cfg" usage:"Set configuration file"`
 	Init struct {
 		Enable  bool
-		Name    string `usage:"Set the name of the network"`
-		Network string `usage:"Set the network addresses"`
-		Netmask string `usage:"Set the network mask"`
+		Name    string `names:"-n, --name" usage:"Set the name of the network"`
+		Network string `names:"-N, --network" usage:"Set the network addresses"`
+		Netmask string `names:"-M, --netmask" usage:"Set the network mask"`
 	} `usage:"Init a network"`
 	Del struct {
 		Enable bool
-		Name   string `usage:"Set the name of the network"`
+		Name   string `names:"-n, --name" usage:"Set the name of the network"`
 	} `usage:"Delete a network"`
 }
 
