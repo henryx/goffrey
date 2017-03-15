@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"ip"
 	"github.com/cosiner/flag"
+	"os"
 )
 
 func testcode() {
@@ -57,6 +58,18 @@ func main() {
 	set := flag.NewFlagSet(flag.Flag{})
 	set.StructFlags(&args)
 	set.Parse()
-	fmt.Println(args.Register.Name)
+
+	if args.Cfg == "" {
+		fmt.Fprintln(os.Stderr, "No custom configuration file passed, using default")
+	}
+
+	if args.Register.Enable {
+		fmt.Println(args.Register.Name)
+	}
+
+	if args.Unregister.Enable {
+
+	}
+
 	set.Help(false)
 }
