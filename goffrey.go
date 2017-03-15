@@ -38,12 +38,12 @@ func testcode() {
 
 type Args struct {
 	Cfg string `names:"-c, --cfg" usage:"Set configuration file"`
-	Add struct {
+	Init struct {
 		Enable  bool
 		Name    string `usage:"Set the name of the network"`
 		Network string `usage:"Set the network addresses"`
 		Netmask string `usage:"Set the network mask"`
-	} `usage:"Add a network"`
+	} `usage:"Init a network"`
 	Del struct {
 		Enable bool
 		Name   string `usage:"Set the name of the network"`
@@ -57,6 +57,6 @@ func main() {
 	set := flag.NewFlagSet(flag.Flag{})
 	set.StructFlags(&args)
 	set.Parse()
-	fmt.Println(args.Add.Name)
+	fmt.Println(args.Init.Name)
 	set.Help(false)
 }
