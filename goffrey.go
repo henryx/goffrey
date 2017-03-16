@@ -93,9 +93,7 @@ func main() {
 
 	if args.Register.Enable {
 		fmt.Println(args.Register.Name)
-	}
-
-	if args.Unregister.Enable {
+	} else if args.Unregister.Enable {
 
 	}
 
