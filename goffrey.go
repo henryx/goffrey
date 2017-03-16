@@ -12,8 +12,11 @@ import (
 	"strings"
 	"strconv"
 	"ip"
+	"github.com/go-ini/ini"
 	"github.com/cosiner/flag"
 	"os"
+	"os/user"
+	"path/filepath"
 )
 
 func testcode() {
@@ -51,17 +54,42 @@ type Args struct {
 	} `usage:"Unregister a network"`
 }
 
+func setCfg(cfg string) *ini.File {
+	var filename string
+	var res *ini.File
+	var err error
+
+	uid, _ := user.Current()
+
+	if cfg != "" {
+		filename = cfg
+	} else {
+		if _, err := os.Stat(uid.HomeDir + string(filepath.Separator) + ".goffreyrc"); os.IsNotExist(err) {
+			filename = string(filepath.Separator) + "etc" + string(filepath.Separator) + "goffrey.cfg"
+		} else {
+			filename = uid.HomeDir + string(filepath.Separator) + ".goffreyrc"
+		}
+	}
+
+	res, err = ini.Load([]byte{}, filename)
+	if err != nil {
+		fmt.Println("Error about reading config file:", err)
+		os.Exit(1)
+	}
+
+	return res
+}
+
 func main() {
 	var args Args
+	var cfg *ini.File
 	testcode()
 
 	set := flag.NewFlagSet(flag.Flag{})
 	set.StructFlags(&args)
 	set.Parse()
 
-	if args.Cfg == "" {
-		fmt.Fprintln(os.Stderr, "No custom configuration file passed, using default")
-	}
+	cfg = setCfg(args.Cfg)
 
 	if args.Register.Enable {
 		fmt.Println(args.Register.Name)
