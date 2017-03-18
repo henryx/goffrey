@@ -17,6 +17,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"actions"
 )
 
 func testcode() {
@@ -42,12 +43,7 @@ func testcode() {
 
 type Args struct {
 	Cfg string `names:"-c, --cfg" usage:"Set configuration file"`
-	Register struct {
-		Enable  bool
-		Name    string `names:"-n, --name" usage:"Set the name of the network"`
-		Network string `names:"-N, --network" usage:"Set the network addresses"`
-		Netmask string `names:"-M, --netmask" usage:"Set the network mask"`
-	} `usage:"Register a network"`
+	Register actions.RegisterData `usage:"Register a network"`
 	Unregister struct {
 		Enable bool
 		Name   string `names:"-n, --name" usage:"Name of the network to unregister"`
@@ -92,10 +88,9 @@ func main() {
 	cfg = setCfg(args.Cfg)
 
 	if args.Register.Enable {
-		fmt.Println(args.Register.Name)
+		data := args.Register
+		actions.Register(cfg, data)
 	} else if args.Unregister.Enable {
 
 	}
-
-	set.Help(false)
 }
