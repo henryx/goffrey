@@ -42,7 +42,7 @@ func testcode() {
 }
 
 type Args struct {
-	Cfg string `names:"-c, --cfg" usage:"Set configuration file"`
+	Cfg      string `names:"-c, --cfg" usage:"Set configuration file"`
 	Register actions.RegisterData `usage:"Register a network"`
 	Unregister struct {
 		Enable bool
@@ -79,11 +79,17 @@ func setCfg(cfg string) *ini.File {
 func main() {
 	var args Args
 	var cfg *ini.File
-	testcode()
+	testcode() // TODO: to remove
 
 	set := flag.NewFlagSet(flag.Flag{})
 	set.StructFlags(&args)
 	set.Parse()
+
+	if len(os.Args) == 1 {
+		fmt.Println("No arguments passed")
+		set.Help(false)
+		os.Exit(0)
+	}
 
 	cfg = setCfg(args.Cfg)
 
