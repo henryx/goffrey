@@ -21,6 +21,27 @@ type RegisterData struct {
 	Netmask string `names:"-M, --netmask" usage:"Set the network mask"`
 }
 
+func openSqlite(location string) (*sql.DB, error) {
+	db, err := dbstore.OpenSQLite(location)
+	return db, err
+}
+
+func openPg(sect *ini.Section) (*sql.DB, error) {
+	dbhost := sect.Key("host").String()
+	dbport, err := sect.Key("port").Int()
+	if err != nil {
+		return nil, errors.New("Invalid PostgreSQL port: " + err.Error())
+	}
+
+	dbuser := sect.Key("user").String()
+	dbpassword := sect.Key("password").String()
+	dbdatabase := sect.Key("database").String()
+
+	db, err := dbstore.OpenPostgres(dbhost, dbport, dbuser, dbpassword, dbdatabase)
+
+	return db, err
+}
+
 func Register(cfg *ini.File, data RegisterData) (error) {
 	var db *sql.DB
 	var err error
@@ -28,18 +49,10 @@ func Register(cfg *ini.File, data RegisterData) (error) {
 	dbtype := cfg.Section("general").Key("dbstore").String()
 	switch dbtype {
 	case "sqlite":
-		location := cfg.Section("sqlite").Key("location").String()
-		db, err = dbstore.OpenSQLite(location)
+		db, err = openSqlite(cfg.Section("sqlite").Key("location").String())
 	case "postgresql":
-		dbhost := cfg.Section("postgresql").Key("host").String()
-		dbport, err := cfg.Section("postgresql").Key("port").Int()
-		if err != nil {
-			return errors.New("Invalid PostgreSQL port: " + err.Error())
-		}
-		dbuser := cfg.Section("postgresql").Key("user").String()
-		dbpassword := cfg.Section("postgresql").Key("password").String()
-		dbdatabase := cfg.Section("postgresql").Key("database").String()
-		db, err = dbstore.OpenPostgres(dbhost, dbport, dbuser, dbpassword, dbdatabase)
+		sect := cfg.Section("postgresql")
+		db, err = openPg(sect)
 	default:
 		return errors.New("Database not supported: " + dbtype)
 	}
@@ -49,5 +62,6 @@ func Register(cfg *ini.File, data RegisterData) (error) {
 	}
 	defer db.Close()
 
+	//TODO: continue it
 	return nil
 }
