@@ -10,7 +10,6 @@ package actions
 import (
 	"github.com/go-ini/ini"
 	"database/sql"
-	"dbstore"
 	"errors"
 )
 
@@ -19,27 +18,6 @@ type RegisterData struct {
 	Name    string `names:"-n, --name" usage:"Set the name of the network"`
 	Network string `names:"-N, --network" usage:"Set the network addresses"`
 	Netmask string `names:"-M, --netmask" usage:"Set the network mask"`
-}
-
-func openSqlite(location string) (*sql.DB, error) {
-	db, err := dbstore.OpenSQLite(location)
-	return db, err
-}
-
-func openPg(sect *ini.Section) (*sql.DB, error) {
-	dbhost := sect.Key("host").String()
-	dbport, err := sect.Key("port").Int()
-	if err != nil {
-		return nil, errors.New("Invalid PostgreSQL port: " + err.Error())
-	}
-
-	dbuser := sect.Key("user").String()
-	dbpassword := sect.Key("password").String()
-	dbdatabase := sect.Key("database").String()
-
-	db, err := dbstore.OpenPostgres(dbhost, dbport, dbuser, dbpassword, dbdatabase)
-
-	return db, err
 }
 
 func Register(cfg *ini.File, data RegisterData) (error) {
