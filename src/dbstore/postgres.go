@@ -10,11 +10,20 @@ package dbstore
 import (
 	"database/sql"
 	_ "github.com/lib/pq"
-	"fmt"
+	"strings"
+	"strconv"
 )
 
 func OpenPostgres(host string, port int, user string, password string, database string) (*sql.DB, error) {
-	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s", user, password, host, port, database)
+	dsn := strings.Join([]string{
+		"user=" + user,
+		"password=" + password,
+		"host=" + host,
+		"port=" + strconv.Itoa(port),
+		"dbname=" + database,
+		"sslmode=disable",
+	}, " ")
+
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		return nil, err
