@@ -15,8 +15,15 @@ func tables() []string {
 			"CREATE TABLE sections(",
 			"section VARCHAR(30),",
 			"network VARCHAR(15),",
-			"netmask VARCHAR(15)",
-			"PRIMARY KEY(name)",
+			"netmask VARCHAR(15),",
+			"PRIMARY KEY(name))",
+		}, " "),
+		strings.Join([]string{
+			"CREATE TABLE addresses(",
+			"section VARCHAR(30),",
+			"address VARCHAR(15),",
+			"hostname VARCHAR(30),",
+			"assigned TIMESTAMP)",
 		}, " "),
 	}
 }
