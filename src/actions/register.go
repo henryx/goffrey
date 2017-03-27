@@ -11,6 +11,7 @@ import (
 	"github.com/go-ini/ini"
 	"database/sql"
 	"errors"
+	"dbstore"
 )
 
 type RegisterData struct {
@@ -40,6 +41,10 @@ func Register(cfg *ini.File, data RegisterData) (error) {
 	}
 	defer db.Close()
 
-	//TODO: continue it
-	return nil
+	err = dbstore.InsertSection(db, dbtype, data.Name, data.Network, data.Netmask)
+	if err != nil {
+		return err
+	} else {
+		return nil
+	}
 }

@@ -7,7 +7,11 @@
 
 package dbstore
 
-import "strings"
+import (
+	"strings"
+	"database/sql"
+	"errors"
+)
 
 func tables() []string {
 	return []string{
@@ -26,4 +30,37 @@ func tables() []string {
 			"assigned TIMESTAMP)",
 		}, " "),
 	}
+}
+
+func InsertSection(db *sql.DB, dbtype string, section, network, netmask string) error {
+	var err error
+
+	query := "INSERT INTO sections(section, network, netmask) VALUES"
+
+	switch dbtype {
+	case "sqlite":
+		query = query + "(?, ?, ?)"
+	case "postgresql":
+		query = query + "($1, $2, $3)"
+	default:
+		return errors.New("No database engine supported")
+	}
+
+	tx, _ := db.Begin()
+
+	stmt, err := tx.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(section, network, netmask)
+	if err != nil {
+		tx.Rollback()
+		return err
+	} else {
+		tx.Commit()
+	}
+
+	return nil
 }
