@@ -25,7 +25,7 @@ func Register(cfg *ini.File, data RegisterData) (error) {
 	var db *sql.DB
 	var err error
 
-	dbtype := cfg.Section("general").Key("dbstore").String()
+	dbtype := cfg.Section("general").Key("database").String()
 	switch dbtype {
 	case "sqlite":
 		db, err = openSqlite(cfg.Section("sqlite").Key("location").String())
