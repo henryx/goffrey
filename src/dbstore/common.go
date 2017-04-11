@@ -20,7 +20,7 @@ func tables() []string {
 			"section VARCHAR(30),",
 			"network VARCHAR(15),",
 			"netmask VARCHAR(15),",
-			"PRIMARY KEY(name))",
+			"PRIMARY KEY(section))",
 		}, " "),
 		strings.Join([]string{
 			"CREATE TABLE addresses(",
