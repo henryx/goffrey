@@ -29,8 +29,8 @@ func Register(cfg *ini.File, data RegisterData) (error) {
 	switch dbtype {
 	case "sqlite":
 		db, err = openSqlite(cfg.Section("sqlite").Key("location").String())
-	case "postgresql":
-		sect := cfg.Section("postgresql")
+	case "postgres":
+		sect := cfg.Section("postgres")
 		db, err = openPg(sect)
 	default:
 		return errors.New("Database not supported: " + dbtype)
