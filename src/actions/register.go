@@ -41,7 +41,7 @@ func Register(cfg *ini.File, data RegisterData) (error) {
 	}
 	defer db.Close()
 
-	err = dbstore.InsertSection(db, dbtype, data.Name, data.Network, data.Netmask)
+	err = dbstore.InsertSection(db, data.Name, data.Network, data.Netmask)
 	if err != nil {
 		return err
 	} else {
