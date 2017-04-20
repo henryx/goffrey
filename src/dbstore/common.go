@@ -10,7 +10,6 @@ package dbstore
 import (
 	"strings"
 	"database/sql"
-	"errors"
 )
 
 func tables() []string {
@@ -32,19 +31,10 @@ func tables() []string {
 	}
 }
 
-func InsertSection(db *sql.DB, dbtype string, section, network, netmask string) error {
+func InsertSection(db *sql.DB, section, network, netmask string) error {
 	var err error
 
-	query := "INSERT INTO sections(section, network, netmask) VALUES"
-
-	switch dbtype {
-	case "sqlite":
-		query = query + "(?, ?, ?)"
-	case "postgresql":
-		query = query + "($1, $2, $3)"
-	default:
-		return errors.New("No database engine supported")
-	}
+	query := "INSERT INTO sections(section, network, netmask) VALUES ($1, $2, $3)"
 
 	tx, _ := db.Begin()
 
