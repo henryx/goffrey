@@ -9,7 +9,7 @@ package dbstore
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/gwenn/gosqlite"
 	"log"
 )
 

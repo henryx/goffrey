@@ -97,6 +97,6 @@ func main() {
 		data := args.Register
 		actions.Register(cfg, data)
 	} else if args.Unregister.Enable {
-
+		// TODO: implement this
 	}
 }
