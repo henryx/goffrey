@@ -8,16 +8,16 @@
 package main
 
 import (
+	"actions"
 	"fmt"
-	"strings"
-	"strconv"
-	"ip"
-	"github.com/go-ini/ini"
 	"github.com/cosiner/flag"
+	"github.com/go-ini/ini"
+	"ip"
 	"os"
 	"os/user"
 	"path/filepath"
-	"actions"
+	"strconv"
+	"strings"
 )
 
 func testcode() {
@@ -42,8 +42,8 @@ func testcode() {
 }
 
 type Args struct {
-	Cfg      string `names:"-c, --cfg" usage:"Set configuration file"`
-	Register actions.RegisterData `usage:"Register a network"`
+	Cfg        string               `names:"-c, --cfg" usage:"Set configuration file"`
+	Register   actions.RegisterData `usage:"Register a network"`
 	Unregister struct {
 		Enable bool
 		Name   string `names:"-n, --name" usage:"Name of the network to unregister"`

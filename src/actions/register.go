@@ -8,10 +8,10 @@
 package actions
 
 import (
-	"github.com/go-ini/ini"
 	"database/sql"
-	"errors"
 	"dbstore"
+	"errors"
+	"github.com/go-ini/ini"
 )
 
 type RegisterData struct {
@@ -21,7 +21,7 @@ type RegisterData struct {
 	Netmask string `names:"-M, --netmask" usage:"Set the network mask"`
 }
 
-func Register(cfg *ini.File, data RegisterData) (error) {
+func Register(cfg *ini.File, data RegisterData) error {
 	var db *sql.DB
 	var err error
 

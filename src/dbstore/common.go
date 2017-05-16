@@ -8,8 +8,8 @@
 package dbstore
 
 import (
-	"strings"
 	"database/sql"
+	"strings"
 )
 
 func tables() []string {

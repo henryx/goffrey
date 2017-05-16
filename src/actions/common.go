@@ -10,8 +10,8 @@ package actions
 import (
 	"database/sql"
 	"dbstore"
-	"github.com/go-ini/ini"
 	"errors"
+	"github.com/go-ini/ini"
 )
 
 func openSqlite(location string) (*sql.DB, error) {

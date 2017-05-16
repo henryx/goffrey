@@ -13,7 +13,6 @@ import (
 	"log"
 )
 
-
 func isSQLiteDbExist(db *sql.DB) bool {
 	var counted int
 	query := "SELECT count(*) FROM sqlite_master"
@@ -44,7 +43,7 @@ func createSQLiteDb(db *sql.DB) {
 	tx.Commit()
 }
 
-func OpenSQLite(location string) (*sql.DB, error){
+func OpenSQLite(location string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", location)
 	if err != nil {
 		return nil, err

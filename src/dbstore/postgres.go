@@ -9,10 +9,10 @@ package dbstore
 
 import (
 	"database/sql"
-	"log"
-	"strings"
-	"strconv"
 	_ "github.com/lib/pq"
+	"log"
+	"strconv"
+	"strings"
 )
 
 func isPgDbExists(db *sql.DB) bool {

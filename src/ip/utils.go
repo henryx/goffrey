@@ -38,5 +38,5 @@ func Range(cidr string) ([]string, error) {
 		ips = append(ips, ip.String())
 	}
 	// remove network address and broadcast address
-	return ips[1: len(ips)-1], nil
+	return ips[1 : len(ips)-1], nil
 }
