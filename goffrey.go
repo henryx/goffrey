@@ -18,6 +18,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"utils"
 )
 
 func testcode() {
@@ -81,6 +82,9 @@ func main() {
 	var cfg *ini.File
 	testcode() // TODO: to remove
 
+	log := utils.Log{}
+	log.Init(os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+
 	set := flag.NewFlagSet(flag.Flag{})
 	set.StructFlags(&args)
 	set.Parse()
@@ -89,7 +93,11 @@ func main() {
 
 	if args.Register.Enable {
 		data := args.Register
-		actions.Register(cfg, data)
+		err := actions.Register(cfg, data)
+		if err != nil {
+			log.Error.Println("Cannot insert section", data.Name)
+			log.Debug.Println(err)
+		}
 	} else if args.Unregister.Enable {
 		// TODO: implement this
 	} else {
