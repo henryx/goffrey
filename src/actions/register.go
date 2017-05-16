@@ -25,6 +25,10 @@ func Register(cfg *ini.File, data RegisterData) error {
 	var db *sql.DB
 	var err error
 
+	if data.Name == "" {
+		return errors.New("No section name passed")
+	}
+
 	dbtype := cfg.Section("general").Key("database").String()
 	switch dbtype {
 	case "sqlite":
