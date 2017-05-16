@@ -10,6 +10,7 @@ package actions
 import (
 	"database/sql"
 	"dbstore"
+	"encoding/json"
 	"errors"
 	"github.com/go-ini/ini"
 )
@@ -26,7 +27,12 @@ func Register(cfg *ini.File, data RegisterData) error {
 	var err error
 
 	if data.Name == "" {
-		return errors.New("No section name passed")
+		jsonerr, _ := json.Marshal(&ActionError{
+			Action:  "register",
+			Code:    1,
+			Message: "No section name passed",
+		})
+		return errors.New(string(jsonerr))
 	}
 
 	dbtype := cfg.Section("general").Key("database").String()
@@ -37,7 +43,12 @@ func Register(cfg *ini.File, data RegisterData) error {
 		sect := cfg.Section("postgres")
 		db, err = openPg(sect)
 	default:
-		return errors.New("Database not supported: " + dbtype)
+		jsonerr, _ := json.Marshal(&ActionError{
+			Action:  "register",
+			Code:    2,
+			Message: "Database not supported:" + dbtype,
+		})
+		return errors.New(string(jsonerr))
 	}
 
 	if err != nil {
@@ -47,7 +58,12 @@ func Register(cfg *ini.File, data RegisterData) error {
 
 	err = dbstore.InsertSection(db, data.Name, data.Network, data.Netmask)
 	if err != nil {
-		return err
+		jsonerr, _ := json.Marshal(&ActionError{
+			Action:  "register",
+			Code:    3,
+			Message: err.Error(),
+		})
+		return errors.New(string(jsonerr))
 	} else {
 		return nil
 	}
