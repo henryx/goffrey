@@ -14,6 +14,12 @@ import (
 	"github.com/go-ini/ini"
 )
 
+type ActionError struct {
+	Action  string `json:"action"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 func openSqlite(location string) (*sql.DB, error) {
 	db, err := dbstore.OpenSQLite(location)
 	return db, err
