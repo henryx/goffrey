@@ -97,8 +97,13 @@ func main() {
 		data := args.Register
 		err := actions.Register(cfg, data)
 		if err != nil {
-			log.Error.Println("Cannot insert section", data.Name)
-			log.Debug.Println(err)
+			if !args.Quiet {
+				log.Error.Println("Cannot insert section", data.Name)
+			}
+
+			if args.Verbose {
+				log.Debug.Println(err)
+			}
 		}
 	} else if args.Unregister.Enable {
 		// TODO: implement this
