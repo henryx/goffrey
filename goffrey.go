@@ -85,12 +85,6 @@ func main() {
 	set.StructFlags(&args)
 	set.Parse()
 
-	if len(os.Args) == 1 {
-		fmt.Println("No arguments passed")
-		set.Help(false)
-		os.Exit(0)
-	}
-
 	cfg = setCfg(args.Cfg)
 
 	if args.Register.Enable {
@@ -98,5 +92,9 @@ func main() {
 		actions.Register(cfg, data)
 	} else if args.Unregister.Enable {
 		// TODO: implement this
+	} else {
+		fmt.Println("No action passed")
+		set.Help(false)
+		os.Exit(0)
 	}
 }
