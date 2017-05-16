@@ -44,6 +44,8 @@ func testcode() {
 
 type Args struct {
 	Cfg        string               `names:"-c, --cfg" usage:"Set configuration file"`
+	Quiet      bool                 `names:"-q, --quiet" usage:"Quiet mode"`
+	Verbose    bool                 `names:"-v, --verbose" usage:"Verbose mode"`
 	Register   actions.RegisterData `usage:"Register a network"`
 	Unregister struct {
 		Enable bool
