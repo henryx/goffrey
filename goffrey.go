@@ -9,6 +9,7 @@ package main
 
 import (
 	"actions"
+	"encoding/json"
 	"fmt"
 	"github.com/cosiner/flag"
 	"github.com/go-ini/ini"
@@ -82,6 +83,7 @@ func setCfg(cfg string) *ini.File {
 func main() {
 	var args Args
 	var cfg *ini.File
+	var jerr actions.ActionError
 	testcode() // TODO: to remove
 
 	log := utils.Log{}
@@ -97,12 +99,20 @@ func main() {
 		data := args.Register
 		err := actions.Register(cfg, data)
 		if err != nil {
-			if !args.Quiet {
-				log.Error.Println("Cannot insert section", data.Name)
-			}
+			_ = json.Unmarshal([]byte(err.Error()), &jerr)
 
-			if args.Verbose {
-				log.Debug.Println(err)
+			switch jerr.Code {
+			case 1, 2:
+				if !args.Quiet {
+					log.Error.Println(jerr.Message)
+				}
+			case 3:
+				if !args.Quiet {
+					log.Error.Println("Cannot insert section", data.Name)
+				}
+				if args.Verbose {
+					log.Debug.Println(jerr.Message)
+				}
 			}
 		}
 	} else if args.Unregister.Enable {
