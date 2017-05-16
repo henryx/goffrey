@@ -23,9 +23,9 @@ func isSQLiteDbExist(db *sql.DB) bool {
 	}
 
 	if counted > 0 {
-		return false
-	} else {
 		return true
+	} else {
+		return false
 	}
 }
 
@@ -50,7 +50,7 @@ func OpenSQLite(location string) (*sql.DB, error){
 		return nil, err
 	}
 
-	if isSQLiteDbExist(db) {
+	if !isSQLiteDbExist(db) {
 		createSQLiteDb(db)
 	}
 	return db, nil
