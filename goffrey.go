@@ -80,10 +80,32 @@ func setCfg(cfg string) *ini.File {
 	return res
 }
 
+func register(log utils.Log, cfg *ini.File, data actions.RegisterData, quiet, verbose bool) {
+	var jerr actions.ActionError
+
+	err := actions.Register(cfg, data)
+	if err != nil {
+		_ = json.Unmarshal([]byte(err.Error()), &jerr)
+
+		switch jerr.Code {
+		case 1, 2:
+			if !quiet {
+				log.Error.Println(jerr.Message)
+			}
+		case 3:
+			if !quiet {
+				log.Error.Println("Cannot insert section", data.Name)
+			}
+			if verbose {
+				log.Debug.Println(jerr.Message)
+			}
+		}
+	}
+}
+
 func main() {
 	var args Args
 	var cfg *ini.File
-	var jerr actions.ActionError
 	testcode() // TODO: to remove
 
 	log := utils.Log{}
@@ -96,25 +118,7 @@ func main() {
 	cfg = setCfg(args.Cfg)
 
 	if args.Register.Enable {
-		data := args.Register
-		err := actions.Register(cfg, data)
-		if err != nil {
-			_ = json.Unmarshal([]byte(err.Error()), &jerr)
-
-			switch jerr.Code {
-			case 1, 2:
-				if !args.Quiet {
-					log.Error.Println(jerr.Message)
-				}
-			case 3:
-				if !args.Quiet {
-					log.Error.Println("Cannot insert section", data.Name)
-				}
-				if args.Verbose {
-					log.Debug.Println(jerr.Message)
-				}
-			}
-		}
+		register(log, cfg, args.Register, args.Quiet, args.Verbose)
 	} else if args.Unregister.Enable {
 		// TODO: implement this
 	} else {
