@@ -10,7 +10,6 @@ package main
 import (
 	"actions"
 	"encoding/json"
-	"fmt"
 	"github.com/cosiner/flag"
 	"github.com/go-ini/ini"
 	"ip"
@@ -22,7 +21,7 @@ import (
 	"utils"
 )
 
-func testcode() {
+func testcode(log utils.Log) {
 	// TODO: remove it
 	var cidr string
 
@@ -37,10 +36,10 @@ func testcode() {
 
 	ips, err := ip.Range(mask[0] + "/" + cidr)
 	if err != nil {
-		fmt.Println("Errorr: " + err.Error())
+		log.Error.Println("Errorr: " + err.Error())
 	}
 
-	fmt.Println(ips)
+	log.Debug.Println(ips)
 }
 
 type Args struct {
@@ -54,7 +53,7 @@ type Args struct {
 	} `usage:"Unregister a network"`
 }
 
-func setCfg(cfg string) *ini.File {
+func setCfg(log utils.Log, cfg string) *ini.File {
 	var filename string
 	var res *ini.File
 	var err error
@@ -73,7 +72,7 @@ func setCfg(cfg string) *ini.File {
 
 	res, err = ini.Load([]byte{}, filename)
 	if err != nil {
-		fmt.Println("Error about reading config file:", err)
+		log.Error.Println("Error about reading config file:", err)
 		os.Exit(1)
 	}
 
@@ -106,23 +105,24 @@ func register(log utils.Log, cfg *ini.File, data actions.RegisterData, quiet, ve
 func main() {
 	var args Args
 	var cfg *ini.File
-	testcode() // TODO: to remove
 
 	log := utils.Log{}
 	log.Init(os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+
+	testcode(log) // TODO: to remove
 
 	set := flag.NewFlagSet(flag.Flag{})
 	set.StructFlags(&args)
 	set.Parse()
 
-	cfg = setCfg(args.Cfg)
+	cfg = setCfg(log, args.Cfg)
 
 	if args.Register.Enable {
 		register(log, cfg, args.Register, args.Quiet, args.Verbose)
 	} else if args.Unregister.Enable {
 		// TODO: implement this
 	} else {
-		fmt.Println("No action passed")
+		log.Error.Println("No action passed")
 		set.Help(false)
 		os.Exit(0)
 	}
