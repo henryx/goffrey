@@ -56,6 +56,16 @@ func Register(cfg *ini.File, data RegisterData) error {
 	}
 	defer db.Close()
 
+	exists := dbstore.IsSectionExists(db, data.Name)
+	if exists {
+		jsonerr, _ := json.Marshal(&ActionError{
+			Action:  "register",
+			Code:    2,
+			Message: "Section " + data.Name + " already exists",
+		})
+		return errors.New(string(jsonerr))
+	}
+
 	err = dbstore.InsertSection(db, data.Name, data.Network, data.Netmask)
 	if err != nil {
 		jsonerr, _ := json.Marshal(&ActionError{
