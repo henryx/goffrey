@@ -36,10 +36,10 @@ func testcode(log utils.Log) {
 
 	ips, err := ip.Range(mask[0] + "/" + cidr)
 	if err != nil {
-		log.Print(utils.ERROR, "Errorr: "+err.Error())
+		log.Println(utils.ERROR, "Errorr: "+err.Error())
 	}
 
-	log.Print(utils.DEBUG, ips)
+	log.Println(utils.DEBUG, ips)
 }
 
 type Args struct {
@@ -72,7 +72,7 @@ func setCfg(log utils.Log, cfg string) *ini.File {
 
 	res, err = ini.Load([]byte{}, filename)
 	if err != nil {
-		log.Print(utils.ERROR, "Error about reading config file:", err)
+		log.Println(utils.ERROR, "Error about reading config file:", err)
 		os.Exit(1)
 	}
 
@@ -89,14 +89,14 @@ func register(log utils.Log, cfg *ini.File, data actions.RegisterData, quiet, ve
 		switch jerr.Code {
 		case 1, 2:
 			if !quiet {
-				log.Print(utils.ERROR, jerr.Message)
+				log.Println(utils.ERROR, jerr.Message)
 			}
 		case 3:
 			if !quiet {
-				log.Print(utils.ERROR, "Cannot insert section", data.Name)
+				log.Println(utils.ERROR, "Cannot insert section", data.Name)
 			}
 			if verbose {
-				log.Print(utils.DEBUG, jerr.Message)
+				log.Println(utils.DEBUG, jerr.Message)
 			}
 		}
 	}
@@ -122,7 +122,7 @@ func main() {
 	} else if args.Unregister.Enable {
 		// TODO: implement this
 	} else {
-		log.Print(utils.ERROR, "No action passed")
+		log.Println(utils.ERROR, "No action passed")
 		set.Help(false)
 		os.Exit(0)
 	}

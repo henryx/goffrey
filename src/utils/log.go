@@ -49,7 +49,7 @@ func (l *Log) Init(infoHandle, warningHandle, errorHandle, debugHandle io.Writer
 		log.Ldate|log.Ltime|log.Lshortfile)
 }
 
-func (l *Log) Print(level int, message ...interface{}) {
+func (l *Log) Println(level int, message ...interface{}) {
 	switch level {
 	case INFO:
 		l.info.Println(message)
@@ -63,7 +63,7 @@ func (l *Log) Print(level int, message ...interface{}) {
 	}
 }
 
-func (l *Log) Getlogger(level int) (*log.Logger, error) {
+func (l *Log) GetLogger(level int) (*log.Logger, error) {
 	switch level {
 	case INFO:
 		return l.info, nil

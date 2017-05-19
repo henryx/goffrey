@@ -44,8 +44,8 @@ func Register(log utils.Log, cfg *ini.File, data RegisterData) error {
 		sect := cfg.Section("postgres")
 		db, err = openPg(sect)
 	default:
-		log.Print(utils.ERROR, "Database not supported")
-		log.Print(utils.DEBUG, "Database specified: "+dbtype)
+		log.Println(utils.ERROR, "Database not supported")
+		log.Println(utils.DEBUG, "Database specified: "+dbtype)
 		return errors.New("Database not supported")
 	}
 
