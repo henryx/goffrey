@@ -54,3 +54,7 @@ func InsertSection(db *sql.DB, section, network, netmask string) error {
 
 	return nil
 }
+
+func IsSectionExists(db *sql.DB, section string) bool {
+	return false
+}
