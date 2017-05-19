@@ -55,6 +55,17 @@ func InsertSection(db *sql.DB, section, network, netmask string) error {
 	return nil
 }
 
-func IsSectionExists(db *sql.DB, section string) bool {
-	return false
+func IsSectionExists(db *sql.DB, section string) (bool, error) {
+	var counted int
+
+	query := "SELECT count(*) FROM sections WHERE section = $1"
+	if err := db.QueryRow(query, section).Scan(&counted); err != nil {
+		return false, err
+	}
+
+	if counted > 0 {
+		return true, nil
+	} else {
+		return false, nil
+	}
 }
