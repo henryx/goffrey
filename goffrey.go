@@ -36,10 +36,10 @@ func testcode(log utils.Log) {
 
 	ips, err := ip.Range(mask[0] + "/" + cidr)
 	if err != nil {
-		log.Error.Println("Errorr: " + err.Error())
+		log.Print(utils.ERROR, "Errorr: "+err.Error())
 	}
 
-	log.Debug.Println(ips)
+	log.Print(utils.DEBUG, ips)
 }
 
 type Args struct {
@@ -72,7 +72,7 @@ func setCfg(log utils.Log, cfg string) *ini.File {
 
 	res, err = ini.Load([]byte{}, filename)
 	if err != nil {
-		log.Error.Println("Error about reading config file:", err)
+		log.Print(utils.ERROR, "Error about reading config file:", err)
 		os.Exit(1)
 	}
 
@@ -82,21 +82,21 @@ func setCfg(log utils.Log, cfg string) *ini.File {
 func register(log utils.Log, cfg *ini.File, data actions.RegisterData, quiet, verbose bool) {
 	var jerr actions.ActionError
 
-	err := actions.Register(cfg, data)
+	err := actions.Register(log, cfg, data)
 	if err != nil {
 		_ = json.Unmarshal([]byte(err.Error()), &jerr)
 
 		switch jerr.Code {
 		case 1, 2:
 			if !quiet {
-				log.Error.Println(jerr.Message)
+				log.Print(utils.ERROR, jerr.Message)
 			}
 		case 3:
 			if !quiet {
-				log.Error.Println("Cannot insert section", data.Name)
+				log.Print(utils.ERROR, "Cannot insert section", data.Name)
 			}
 			if verbose {
-				log.Debug.Println(jerr.Message)
+				log.Print(utils.DEBUG, jerr.Message)
 			}
 		}
 	}
@@ -122,7 +122,7 @@ func main() {
 	} else if args.Unregister.Enable {
 		// TODO: implement this
 	} else {
-		log.Error.Println("No action passed")
+		log.Print(utils.ERROR, "No action passed")
 		set.Help(false)
 		os.Exit(0)
 	}

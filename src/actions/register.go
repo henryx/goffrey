@@ -13,6 +13,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/go-ini/ini"
+	"utils"
 )
 
 type RegisterData struct {
@@ -22,7 +23,7 @@ type RegisterData struct {
 	Netmask string `names:"-M, --netmask" usage:"Set the network mask"`
 }
 
-func Register(cfg *ini.File, data RegisterData) error {
+func Register(log utils.Log, cfg *ini.File, data RegisterData) error {
 	var db *sql.DB
 	var err error
 
@@ -43,12 +44,9 @@ func Register(cfg *ini.File, data RegisterData) error {
 		sect := cfg.Section("postgres")
 		db, err = openPg(sect)
 	default:
-		jsonerr, _ := json.Marshal(&ActionError{
-			Action:  "register",
-			Code:    2,
-			Message: "Database not supported:" + dbtype,
-		})
-		return errors.New(string(jsonerr))
+		log.Print(utils.ERROR, "Database not supported")
+		log.Print(utils.DEBUG, "Database specified: "+dbtype)
+		return errors.New("Database not supported")
 	}
 
 	if err != nil {
