@@ -28,12 +28,8 @@ func Register(log utils.Log, cfg *ini.File, data RegisterData) error {
 	var err error
 
 	if data.Name == "" {
-		jsonerr, _ := json.Marshal(&ActionError{
-			Action:  "register",
-			Code:    1,
-			Message: "No section name passed",
-		})
-		return errors.New(string(jsonerr))
+		log.Println(utils.DEBUG, "Section name is empty")
+		return errors.New("No section name passed")
 	}
 
 	dbtype := cfg.Section("general").Key("database").String()
@@ -44,7 +40,6 @@ func Register(log utils.Log, cfg *ini.File, data RegisterData) error {
 		sect := cfg.Section("postgres")
 		db, err = openPg(sect)
 	default:
-		log.Println(utils.ERROR, "Database not supported")
 		log.Println(utils.DEBUG, "Database specified: "+dbtype)
 		return errors.New("Database not supported")
 	}
@@ -56,29 +51,16 @@ func Register(log utils.Log, cfg *ini.File, data RegisterData) error {
 
 	exists, err := dbstore.IsSectionExists(db, data.Name)
 	if exists {
-		jsonerr, _ := json.Marshal(&ActionError{
-			Action:  "register",
-			Code:    2,
-			Message: "Section " + data.Name + " already exists",
-		})
-		return errors.New(string(jsonerr))
+		return errors.New("Section " + data.Name + " already exists")
 	} else if err != nil {
-		jsonerr, _ := json.Marshal(&ActionError{
-			Action:  "register",
-			Code:    3,
-			Message: err.Error(),
-		})
-		return errors.New(string(jsonerr))
+		log.Println(utils.DEBUG, "Error in check section: "+err.Error())
+		return errors.New("Error about checking section")
 	}
 
 	err = dbstore.InsertSection(db, data.Name, data.Network, data.Netmask)
 	if err != nil {
-		jsonerr, _ := json.Marshal(&ActionError{
-			Action:  "register",
-			Code:    3,
-			Message: err.Error(),
-		})
-		return errors.New(string(jsonerr))
+		log.Println(utils.DEBUG, "Error when insert section: "+err.Error())
+		return errors.New("Error about insert section")
 	} else {
 		return nil
 	}

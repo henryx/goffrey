@@ -80,19 +80,9 @@ func setCfg(log utils.Log, cfg string) *ini.File {
 }
 
 func register(log utils.Log, cfg *ini.File, data actions.RegisterData) {
-	var jerr actions.ActionError
-
 	err := actions.Register(log, cfg, data)
 	if err != nil {
-		_ = json.Unmarshal([]byte(err.Error()), &jerr)
-
-		switch jerr.Code {
-		case 1, 2:
-			log.Println(utils.ERROR, jerr.Message)
-		case 3:
-			log.Println(utils.ERROR, "Cannot insert section", data.Name)
-			log.Println(utils.DEBUG, jerr.Message)
-		}
+		log.Println(utils.ERROR, err.Error())
 	}
 }
 
