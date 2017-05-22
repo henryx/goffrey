@@ -25,9 +25,9 @@ type Log struct {
 
 const (
 	DEBUG loglevel = iota
-	ERROR
-	WARNING
 	INFO
+	WARNING
+	ERROR
 )
 
 func (l *Log) Init(level loglevel, infoHandle, warningHandle, errorHandle, debugHandle io.Writer) {
@@ -57,19 +57,19 @@ func (l *Log) Init(level loglevel, infoHandle, warningHandle, errorHandle, debug
 func (l *Log) Println(level loglevel, message ...interface{}) {
 	switch level {
 	case INFO:
-		if l.level <= level {
+		if l.level >= level {
 			l.info.Println(message)
 		}
 	case WARNING:
-		if l.level <= level {
+		if l.level >= level {
 			l.warning.Println(message)
 		}
 	case ERROR:
-		if l.level <= level {
+		if l.level >= level {
 			l.error.Println(message)
 		}
 	case DEBUG:
-		if l.level <= level {
+		if l.level >= level {
 			l.debug.Println(message)
 		}
 	}
