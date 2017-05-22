@@ -13,7 +13,10 @@ import (
 	"log"
 )
 
+type loglevel int
+
 type Log struct {
+	level   loglevel
 	info    *log.Logger
 	warning *log.Logger
 	error   *log.Logger
@@ -21,16 +24,18 @@ type Log struct {
 }
 
 const (
-	INFO = iota
+	INFO loglevel = iota
 	WARNING
 	ERROR
 	DEBUG
 )
 
-func (l *Log) Init(infoHandle, warningHandle, errorHandle, debugHandle io.Writer) {
+func (l *Log) Init(level loglevel, infoHandle, warningHandle, errorHandle, debugHandle io.Writer) {
 	// Usage:
 	// l.Init(os.Stdout, os.Stdout, os.Stderr, ioutil.Discard)
 	// l.Debug.Println("log message")
+
+	l.level = level
 
 	l.info = log.New(infoHandle,
 		"INFO: ",
@@ -49,7 +54,7 @@ func (l *Log) Init(infoHandle, warningHandle, errorHandle, debugHandle io.Writer
 		log.Ldate|log.Ltime|log.Lshortfile)
 }
 
-func (l *Log) Println(level int, message ...interface{}) {
+func (l *Log) Println(level loglevel, message ...interface{}) {
 	switch level {
 	case INFO:
 		l.info.Println(message)
@@ -59,11 +64,10 @@ func (l *Log) Println(level int, message ...interface{}) {
 		l.error.Println(message)
 	case DEBUG:
 		l.debug.Println(message)
-
 	}
 }
 
-func (l *Log) GetLogger(level int) (*log.Logger, error) {
+func (l *Log) GetLogger(level loglevel) (*log.Logger, error) {
 	switch level {
 	case INFO:
 		return l.info, nil
@@ -75,6 +79,5 @@ func (l *Log) GetLogger(level int) (*log.Logger, error) {
 		return l.debug, nil
 	default:
 		return nil, errors.New("No logger specified")
-
 	}
 }
