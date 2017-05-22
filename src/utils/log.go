@@ -63,23 +63,23 @@ func (l *Log) Init(level loglevel, criticalHandle, errorHandle, warningHandle, i
 func (l *Log) Println(level loglevel, message ...interface{}) {
 	switch level {
 	case CRITICAL:
-		if l.level >= level {
+		if l.level <= level {
 			l.critical.Println(message)
 		}
 	case INFO:
-		if l.level >= level {
+		if l.level <= level {
 			l.info.Println(message)
 		}
 	case WARNING:
-		if l.level >= level {
+		if l.level <= level {
 			l.warning.Println(message)
 		}
 	case ERROR:
-		if l.level >= level {
+		if l.level <= level {
 			l.error.Println(message)
 		}
 	case DEBUG:
-		if l.level >= level {
+		if l.level <= level {
 			l.debug.Println(message)
 		}
 	}
