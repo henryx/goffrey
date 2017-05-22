@@ -9,7 +9,6 @@ package main
 
 import (
 	"actions"
-	"encoding/json"
 	"github.com/cosiner/flag"
 	"github.com/go-ini/ini"
 	"ip"

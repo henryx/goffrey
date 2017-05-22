@@ -10,7 +10,6 @@ package actions
 import (
 	"database/sql"
 	"dbstore"
-	"encoding/json"
 	"errors"
 	"github.com/go-ini/ini"
 	"utils"
