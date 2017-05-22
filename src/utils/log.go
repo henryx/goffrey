@@ -32,7 +32,7 @@ const (
 	CRITICAL
 )
 
-func (l *Log) Init(level loglevel, criticalHandle, infoHandle, warningHandle, errorHandle, debugHandle io.Writer) {
+func (l *Log) Init(level loglevel, criticalHandle, errorHandle, warningHandle, infoHandle, debugHandle io.Writer) {
 	// Usage:
 	// l.Init(os.Stdout, os.Stdout, os.Stderr, ioutil.Discard)
 	// l.Debug.Println("log message")
