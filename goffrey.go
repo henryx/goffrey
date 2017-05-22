@@ -79,7 +79,7 @@ func setCfg(log utils.Log, cfg string) *ini.File {
 	return res
 }
 
-func register(log utils.Log, cfg *ini.File, data actions.RegisterData, quiet, verbose bool) {
+func register(log utils.Log, cfg *ini.File, data actions.RegisterData) {
 	var jerr actions.ActionError
 
 	err := actions.Register(log, cfg, data)
@@ -88,16 +88,10 @@ func register(log utils.Log, cfg *ini.File, data actions.RegisterData, quiet, ve
 
 		switch jerr.Code {
 		case 1, 2:
-			if !quiet {
-				log.Println(utils.ERROR, jerr.Message)
-			}
+			log.Println(utils.ERROR, jerr.Message)
 		case 3:
-			if !quiet {
-				log.Println(utils.ERROR, "Cannot insert section", data.Name)
-			}
-			if verbose {
-				log.Println(utils.DEBUG, jerr.Message)
-			}
+			log.Println(utils.ERROR, "Cannot insert section", data.Name)
+			log.Println(utils.DEBUG, jerr.Message)
 		}
 	}
 }
@@ -106,19 +100,25 @@ func main() {
 	var args Args
 	var cfg *ini.File
 
-	log := utils.Log{}
-	log.Init(os.Stdout, os.Stdout, os.Stderr, os.Stderr)
-
-	testcode(log) // TODO: to remove
-
 	set := flag.NewFlagSet(flag.Flag{})
 	set.StructFlags(&args)
 	set.Parse()
 
+	log := utils.Log{}
+	if args.Verbose {
+		log.Init(utils.DEBUG, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+	} else if args.Quiet {
+		log.Init(utils.CRITICAL, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+	} else {
+		log.Init(utils.ERROR, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+	}
+
+	testcode(log) // TODO: to remove
+
 	cfg = setCfg(log, args.Cfg)
 
 	if args.Register.Enable {
-		register(log, cfg, args.Register, args.Quiet, args.Verbose)
+		register(log, cfg, args.Register)
 	} else if args.Unregister.Enable {
 		// TODO: implement this
 	} else {
