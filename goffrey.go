@@ -12,15 +12,15 @@ import (
 	"github.com/cosiner/flag"
 	"github.com/go-ini/ini"
 	"ip"
+	"logging"
 	"os"
 	"os/user"
 	"path/filepath"
 	"strconv"
 	"strings"
-	"utils"
 )
 
-func testcode(log utils.Log) {
+func testcode(log logging.Log) {
 	// TODO: remove it
 	var cidr string
 
@@ -35,10 +35,10 @@ func testcode(log utils.Log) {
 
 	ips, err := ip.Range(mask[0] + "/" + cidr)
 	if err != nil {
-		log.Println(utils.ERROR, "Errorr: "+err.Error())
+		log.Println(logging.ERROR, "Errorr: "+err.Error())
 	}
 
-	log.Println(utils.DEBUG, ips)
+	log.Println(logging.DEBUG, ips)
 }
 
 type Args struct {
@@ -52,7 +52,7 @@ type Args struct {
 	} `usage:"Unregister a network"`
 }
 
-func setCfg(log utils.Log, cfg string) *ini.File {
+func setCfg(log logging.Log, cfg string) *ini.File {
 	var filename string
 	var res *ini.File
 	var err error
@@ -71,17 +71,17 @@ func setCfg(log utils.Log, cfg string) *ini.File {
 
 	res, err = ini.Load([]byte{}, filename)
 	if err != nil {
-		log.Println(utils.ERROR, "Error about reading config file:", err)
+		log.Println(logging.ERROR, "Error about reading config file:", err)
 		os.Exit(1)
 	}
 
 	return res
 }
 
-func register(log utils.Log, cfg *ini.File, data actions.RegisterData) {
+func register(log logging.Log, cfg *ini.File, data actions.RegisterData) {
 	err := actions.Register(log, cfg, data)
 	if err != nil {
-		log.Println(utils.ERROR, err.Error())
+		log.Println(logging.ERROR, err.Error())
 	}
 }
 
@@ -93,13 +93,13 @@ func main() {
 	set.StructFlags(&args)
 	set.Parse()
 
-	log := utils.Log{}
+	log := logging.Log{}
 	if args.Verbose {
-		log.Init(utils.DEBUG, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+		log.Init(logging.DEBUG, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
 	} else if args.Quiet {
-		log.Init(utils.CRITICAL, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+		log.Init(logging.CRITICAL, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
 	} else {
-		log.Init(utils.ERROR, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+		log.Init(logging.ERROR, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
 	}
 
 	testcode(log) // TODO: to remove
@@ -111,7 +111,7 @@ func main() {
 	} else if args.Unregister.Enable {
 		// TODO: implement this
 	} else {
-		log.Println(utils.ERROR, "No action passed")
+		log.Println(logging.ERROR, "No action passed")
 		set.Help(false)
 		os.Exit(0)
 	}
