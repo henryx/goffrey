@@ -16,11 +16,12 @@ import (
 type loglevel int
 
 type Log struct {
-	level   loglevel
-	info    *log.Logger
-	warning *log.Logger
-	error   *log.Logger
-	debug   *log.Logger
+	level    loglevel
+	info     *log.Logger
+	warning  *log.Logger
+	error    *log.Logger
+	debug    *log.Logger
+	critical *log.Logger
 }
 
 const (
@@ -28,14 +29,19 @@ const (
 	INFO
 	WARNING
 	ERROR
+	CRITICAL
 )
 
-func (l *Log) Init(level loglevel, infoHandle, warningHandle, errorHandle, debugHandle io.Writer) {
+func (l *Log) Init(level loglevel, criticalHandle, infoHandle, warningHandle, errorHandle, debugHandle io.Writer) {
 	// Usage:
 	// l.Init(os.Stdout, os.Stdout, os.Stderr, ioutil.Discard)
 	// l.Debug.Println("log message")
 
 	l.level = level
+
+	l.critical = log.New(criticalHandle,
+		"CRITICAL: ",
+		log.Ldate|log.Ltime)
 
 	l.info = log.New(infoHandle,
 		"INFO: ",
@@ -56,6 +62,10 @@ func (l *Log) Init(level loglevel, infoHandle, warningHandle, errorHandle, debug
 
 func (l *Log) Println(level loglevel, message ...interface{}) {
 	switch level {
+	case CRITICAL:
+		if l.level >= level {
+			l.critical.Println(message)
+		}
 	case INFO:
 		if l.level >= level {
 			l.info.Println(message)
@@ -77,6 +87,8 @@ func (l *Log) Println(level loglevel, message ...interface{}) {
 
 func (l *Log) GetLogger(level loglevel) (*log.Logger, error) {
 	switch level {
+	case CRITICAL:
+		return l.critical, nil
 	case INFO:
 		return l.info, nil
 	case WARNING:
