@@ -12,7 +12,7 @@ import (
 	"dbstore"
 	"errors"
 	"github.com/go-ini/ini"
-	"logging"
+	"github.com/op/go-logging"
 )
 
 type RegisterData struct {
@@ -22,12 +22,12 @@ type RegisterData struct {
 	Netmask string `names:"-M, --netmask" usage:"Set the network mask"`
 }
 
-func Register(log logging.Log, cfg *ini.File, data RegisterData) error {
+func Register(log *logging.Logger, cfg *ini.File, data RegisterData) error {
 	var db *sql.DB
 	var err error
 
 	if data.Name == "" {
-		log.Println(logging.DEBUG, "Section name is empty")
+		log.Debug("Section name is empty")
 		return errors.New("No section name passed")
 	}
 
@@ -39,7 +39,7 @@ func Register(log logging.Log, cfg *ini.File, data RegisterData) error {
 		sect := cfg.Section("postgres")
 		db, err = openPg(sect)
 	default:
-		log.Println(logging.DEBUG, "Database specified: "+dbtype)
+		log.Debug("Database specified: "+dbtype)
 		return errors.New("Database not supported")
 	}
 
@@ -52,13 +52,13 @@ func Register(log logging.Log, cfg *ini.File, data RegisterData) error {
 	if exists {
 		return errors.New("Section " + data.Name + " already exists")
 	} else if err != nil {
-		log.Println(logging.DEBUG, "Error in check section: "+err.Error())
+		log.Debug("Error in check section: "+err.Error())
 		return errors.New("Error about checking section")
 	}
 
 	err = dbstore.InsertSection(db, data.Name, data.Network, data.Netmask)
 	if err != nil {
-		log.Println(logging.DEBUG, "Error when insert section: "+err.Error())
+		log.Debug("Error when insert section: "+err.Error())
 		return errors.New("Error about insert section")
 	} else {
 		return nil

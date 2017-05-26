@@ -11,8 +11,8 @@ import (
 	"actions"
 	"github.com/cosiner/flag"
 	"github.com/go-ini/ini"
+	"github.com/op/go-logging"
 	"ip"
-	"logging"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -20,7 +20,7 @@ import (
 	"strings"
 )
 
-func testcode(log logging.Log) {
+func testcode(log *logging.Logger) {
 	// TODO: remove it
 	var cidr string
 
@@ -35,10 +35,10 @@ func testcode(log logging.Log) {
 
 	ips, err := ip.Range(mask[0] + "/" + cidr)
 	if err != nil {
-		log.Println(logging.ERROR, "Errorr: "+err.Error())
+		log.Error("Errorr: " + err.Error())
 	}
 
-	log.Println(logging.DEBUG, ips)
+	log.Debug(ips)
 }
 
 type Args struct {
@@ -52,7 +52,7 @@ type Args struct {
 	} `usage:"Unregister a network"`
 }
 
-func setCfg(log logging.Log, cfg string) *ini.File {
+func setCfg(log *logging.Logger, cfg string) *ini.File {
 	var filename string
 	var res *ini.File
 	var err error
@@ -71,36 +71,68 @@ func setCfg(log logging.Log, cfg string) *ini.File {
 
 	res, err = ini.Load([]byte{}, filename)
 	if err != nil {
-		log.Println(logging.ERROR, "Error about reading config file:", err)
+		log.Error("Error about reading config file:", err)
 		os.Exit(1)
 	}
 
 	return res
 }
 
-func register(log logging.Log, cfg *ini.File, data actions.RegisterData) {
+func setLog(level logging.Level, filename string) *logging.Logger {
+	var backend *logging.LogBackend
+	var log = logging.MustGetLogger("Goffrey")
+	var format logging.Formatter
+
+	if strings.ToUpper(level.String()) != "DEBUG" {
+		format = logging.MustStringFormatter(
+			"%{time:2006-01-02 15:04:05.000} %{level} - Goffrey - %{message}",
+		)
+	} else {
+		format = logging.MustStringFormatter(
+			"%{time:2006-01-02 15:04:05.000} %{level} - %{shortfile} - Goffrey - %{message}",
+		)
+	}
+
+	if filename == "" {
+		backend = logging.NewLogBackend(os.Stderr, "", 0)
+	} else {
+		fo, _ := os.OpenFile(filename, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+		backend = logging.NewLogBackend(fo, "", 0)
+	}
+
+	backendLeveled := logging.AddModuleLevel(backend)
+	backendLeveled.SetLevel(level, "")
+
+	logging.SetBackend(backendLeveled)
+	logging.SetFormatter(format)
+
+	return log
+}
+
+func register(log *logging.Logger, cfg *ini.File, data actions.RegisterData) {
 	err := actions.Register(log, cfg, data)
 	if err != nil {
-		log.Println(logging.ERROR, err.Error())
+		log.Error(err.Error())
 	}
 }
 
 func main() {
 	var args Args
 	var cfg *ini.File
+	var level logging.Level
 
 	set := flag.NewFlagSet(flag.Flag{})
 	set.StructFlags(&args)
 	set.Parse()
 
-	log := logging.Log{}
 	if args.Verbose {
-		log.Init(logging.DEBUG, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+		level = logging.DEBUG
 	} else if args.Quiet {
-		log.Init(logging.CRITICAL, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+		level = logging.CRITICAL
 	} else {
-		log.Init(logging.ERROR, os.Stdout, os.Stdout, os.Stdout, os.Stderr, os.Stderr)
+		level = logging.ERROR
 	}
+	log := setLog(level, "")
 
 	testcode(log) // TODO: to remove
 
@@ -111,7 +143,7 @@ func main() {
 	} else if args.Unregister.Enable {
 		// TODO: implement this
 	} else {
-		log.Println(logging.ERROR, "No action passed")
+		log.Error("No action passed")
 		set.Help(false)
 		os.Exit(0)
 	}
