@@ -132,7 +132,7 @@ func main() {
 	} else if args.Quiet {
 		level = logging.CRITICAL
 	} else {
-		level = logging.ERROR
+		level = logging.INFO
 	}
 	log := setLog(level, "")
 
