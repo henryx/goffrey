@@ -113,6 +113,8 @@ func register(log *logging.Logger, cfg *ini.File, data actions.RegisterData) {
 	err := actions.Register(log, cfg, data)
 	if err != nil {
 		log.Error(err.Error())
+	} else {
+		log.Infof("Section %s registered", data.Name)
 	}
 }
 
