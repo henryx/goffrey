@@ -42,14 +42,11 @@ func testcode(log *logging.Logger) {
 }
 
 type Args struct {
-	Cfg        string               `names:"-c, --cfg" usage:"Set configuration file"`
-	Quiet      bool                 `names:"-q, --quiet" usage:"Quiet mode"`
-	Verbose    bool                 `names:"-v, --verbose" usage:"Verbose mode"`
-	Register   actions.RegisterData `usage:"Register a network"`
-	Unregister struct {
-		Enable bool
-		Name   string `names:"-n, --name" usage:"Name of the network to unregister"`
-	} `usage:"Unregister a network"`
+	Cfg        string                 `names:"-c, --cfg" usage:"Set configuration file"`
+	Quiet      bool                   `names:"-q, --quiet" usage:"Quiet mode"`
+	Verbose    bool                   `names:"-v, --verbose" usage:"Verbose mode"`
+	Register   actions.RegisterData   `usage:"Register a network"`
+	Unregister actions.UnregisterData `usage:"Unregister a network"`
 }
 
 func setCfg(log *logging.Logger, cfg string) *ini.File {
