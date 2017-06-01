@@ -12,10 +12,26 @@ import (
 	"dbstore"
 	"errors"
 	"github.com/go-ini/ini"
+	"github.com/op/go-logging"
 )
 
-func openDb() (*sql.DB, error) {
-	return nil, nil
+func openDb(log *logging.Logger, cfg *ini.File) (*sql.DB, error) {
+	var db *sql.DB
+	var err error
+
+	dbtype := cfg.Section("general").Key("database").String()
+	switch dbtype {
+	case "sqlite":
+		db, err = openSqlite(cfg.Section("sqlite").Key("location").String())
+	case "postgres":
+		sect := cfg.Section("postgres")
+		db, err = openPg(sect)
+	default:
+		log.Debug("Database specified: " + dbtype)
+		return nil, errors.New("Database not supported")
+	}
+
+	return db, err
 }
 
 func openSqlite(location string) (*sql.DB, error) {
