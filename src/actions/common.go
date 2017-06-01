@@ -14,6 +14,10 @@ import (
 	"github.com/go-ini/ini"
 )
 
+func openDb() (*sql.DB, error) {
+	return nil, nil
+}
+
 func openSqlite(location string) (*sql.DB, error) {
 	db, err := dbstore.OpenSQLite(location)
 	return db, err
