@@ -31,18 +31,7 @@ func Register(log *logging.Logger, cfg *ini.File, data RegisterData) error {
 		return errors.New("No section name passed")
 	}
 
-	dbtype := cfg.Section("general").Key("database").String()
-	switch dbtype {
-	case "sqlite":
-		db, err = openSqlite(cfg.Section("sqlite").Key("location").String())
-	case "postgres":
-		sect := cfg.Section("postgres")
-		db, err = openPg(sect)
-	default:
-		log.Debug("Database specified: "+dbtype)
-		return errors.New("Database not supported")
-	}
-
+	db, err = openDb(log, cfg)
 	if err != nil {
 		return err
 	}
