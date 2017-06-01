@@ -69,3 +69,12 @@ func IsSectionExists(db *sql.DB, section string) (bool, error) {
 		return false, nil
 	}
 }
+
+func RemoveSection(db *sql.DB, section string) error {
+	query := "DELETE FROM sections WHERE section = $1"
+	// TODO: remove data from children table
+
+	_, err := db.Exec(query, section)
+
+	return err
+}
