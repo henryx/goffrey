@@ -115,6 +115,15 @@ func register(log *logging.Logger, cfg *ini.File, data actions.RegisterData) {
 	}
 }
 
+func unregister(log *logging.Logger, cfg *ini.File, data actions.UnregisterData) {
+	err := actions.Unregister(log, cfg, data)
+	if err != nil {
+		log.Error(err.Error())
+	} else {
+		log.Infof("Section %s unregistered", data.Name)
+	}
+}
+
 func main() {
 	var args Args
 	var cfg *ini.File
@@ -140,7 +149,7 @@ func main() {
 	if args.Register.Enable {
 		register(log, cfg, args.Register)
 	} else if args.Unregister.Enable {
-		// TODO: implement this
+		unregister(log, cfg, args.Unregister)
 	} else {
 		log.Error("No action passed")
 		set.Help(false)
