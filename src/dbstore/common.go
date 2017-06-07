@@ -72,7 +72,14 @@ func IsSectionExists(db *sql.DB, section string) (bool, error) {
 
 func RemoveSection(db *sql.DB, section string) error {
 	query := "DELETE FROM sections WHERE section = $1"
-	// TODO: remove data from children table
+
+	_, err := db.Exec(query, section)
+
+	return err
+}
+
+func RemoveAddresses(db *sql.DB, section string) error {
+	query := "DELETE FROM addresses WHERE section = $1"
 
 	_, err := db.Exec(query, section)
 
