@@ -45,8 +45,8 @@ func Unregister(log *logging.Logger, cfg *ini.File, data UnregisterData) error {
 
 	err = dbstore.RemoveSection(db, data.Name)
 	if err != nil {
-		log.Debug("Error when insert section: "+err.Error())
-		return errors.New("Error about insert section")
+		log.Debug("Error when remove section: "+err.Error())
+		return errors.New("Error about remove section")
 	} else {
 		return nil
 	}
