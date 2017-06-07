@@ -8,11 +8,11 @@
 package actions
 
 import (
-	"github.com/op/go-logging"
-	"github.com/go-ini/ini"
-	"errors"
-	"dbstore"
 	"database/sql"
+	"dbstore"
+	"errors"
+	"github.com/go-ini/ini"
+	"github.com/op/go-logging"
 )
 
 type UnregisterData struct {
@@ -43,13 +43,14 @@ func Unregister(log *logging.Logger, cfg *ini.File, data UnregisterData) error {
 		return errors.New("Error about checking section")
 	}
 
-	err = dbstore.RemoveSection(db, data.Name)
-	if err != nil {
-		log.Debug("Error when remove section: "+err.Error())
-		return errors.New("Error about remove section")
-	} else {
-		return nil
+	if err := dbstore.RemoveAddresses(db, data.Name); err != nil {
+		log.Debug("Error when remove addresses for section: " + err.Error())
+		return errors.New("Error about remove associated addresses fo section")
 	}
 
+	if err = dbstore.RemoveSection(db, data.Name); err != nil {
+		log.Debug("Error when remove section: " + err.Error())
+		return errors.New("Error about remove section")
+	}
 	return nil
 }
