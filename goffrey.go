@@ -126,6 +126,14 @@ func unregister(log *logging.Logger, cfg *ini.File, data actions.UnregisterData)
 	}
 }
 
+func assign(log *logging.Logger, cfg *ini.File, data actions.AssignData) {
+	// TODO implement this
+}
+
+func remove(log *logging.Logger, cfg *ini.File, data actions.RemoveData) {
+	// TODO implement this
+}
+
 func main() {
 	var args Args
 	var cfg *ini.File
@@ -152,6 +160,10 @@ func main() {
 		register(log, cfg, args.Register)
 	} else if args.Unregister.Enable {
 		unregister(log, cfg, args.Unregister)
+	} else if args.Assign.Enable {
+		assign(log, cfg, args.Assign)
+	} else if args.Remove.Enable {
+		remove(log, cfg, args.Remove)
 	} else {
 		log.Error("No action passed")
 		set.Help(false)
