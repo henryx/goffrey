@@ -47,6 +47,8 @@ type Args struct {
 	Verbose    bool                   `names:"-v, --verbose" usage:"Verbose mode"`
 	Register   actions.RegisterData   `usage:"Register a network"`
 	Unregister actions.UnregisterData `usage:"Unregister a network"`
+	Assign     actions.AssignData     `usage:"Associate address"`
+	Remove     actions.RemoveData     `usage:"Remove associated address"`
 }
 
 func setCfg(log *logging.Logger, cfg string) *ini.File {
