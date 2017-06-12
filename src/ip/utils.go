@@ -8,6 +8,7 @@
 package ip
 
 import (
+	"errors"
 	"net"
 	"strconv"
 	"strings"
@@ -22,19 +23,28 @@ func inc(ip net.IP) {
 	}
 }
 
-func ToCidr(mask string) int {
+func ToCidr(mask string) (int, error) {
 	var cidr int
+	var err error
 
 	if strings.Contains(mask, ".") {
 		netmask := net.IPMask(net.ParseIP(mask).To4()) // If you have the mask as a string
 		//netmask := net.IPv4Mask(255,255,255,0) // If you have the mask as 4 integer values
 
 		cidr, _ = netmask.Size()
+		if cidr == 0 {
+			err := errors.New("No valid netmask: " + mask)
+			return 0, err
+		}
+
 	} else {
-		cidr, _ = strconv.Atoi(mask)
+		cidr, err = strconv.Atoi(mask)
+		if err != nil {
+			return 0, err
+		}
 	}
 
-	return cidr
+	return cidr, nil
 
 }
 

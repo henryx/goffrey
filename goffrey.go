@@ -27,11 +27,17 @@ func testcode(log *logging.Logger) {
 	network := "192.168.0.0/255.255.255.252"
 	mask := strings.Split(network, "/")
 
-	cidr = strconv.Itoa(ip.ToCidr(mask[1]))
+	netmask, err := ip.ToCidr(mask[1])
+	if err != nil {
+		log.Error("Error: " + err.Error())
+		return
+	}
+
+	cidr = strconv.Itoa(netmask)
 
 	ips, err := ip.Range(mask[0] + "/" + cidr)
 	if err != nil {
-		log.Error("Errorr: " + err.Error())
+		log.Error("Error: " + err.Error())
 	}
 
 	log.Debug(ips)
