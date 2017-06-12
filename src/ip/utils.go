@@ -7,7 +7,11 @@
 
 package ip
 
-import "net"
+import (
+	"net"
+	"strconv"
+	"strings"
+)
 
 func inc(ip net.IP) {
 	for j := len(ip) - 1; j >= 0; j-- {
@@ -19,11 +23,18 @@ func inc(ip net.IP) {
 }
 
 func ToCidr(mask string) int {
-	netmask := net.IPMask(net.ParseIP(mask).To4()) // If you have the mask as a string
-	//netmask := net.IPv4Mask(255,255,255,0) // If you have the mask as 4 integer values
+	var cidr int
 
-	prefix, _ := netmask.Size()
-	return prefix
+	if strings.Contains(mask, ".") {
+		netmask := net.IPMask(net.ParseIP(mask).To4()) // If you have the mask as a string
+		//netmask := net.IPv4Mask(255,255,255,0) // If you have the mask as 4 integer values
+
+		cidr, _ = netmask.Size()
+	} else {
+		cidr, _ = strconv.Atoi(mask)
+	}
+
+	return cidr
 
 }
 
