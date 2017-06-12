@@ -22,7 +22,8 @@ func openDb(log *logging.Logger, cfg *ini.File) (*sql.DB, error) {
 	dbtype := cfg.Section("general").Key("database").String()
 	switch dbtype {
 	case "sqlite":
-		db, err = openSqlite(cfg.Section("sqlite").Key("location").String())
+		location := cfg.Section("sqlite").Key("location").String()
+		db, err = openSqlite(location)
 	case "postgres":
 		sect := cfg.Section("postgres")
 		db, err = openPg(sect)

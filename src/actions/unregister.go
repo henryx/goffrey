@@ -43,11 +43,6 @@ func Unregister(log *logging.Logger, cfg *ini.File, data UnregisterData) error {
 		return errors.New("Error about checking section")
 	}
 
-	if err := dbstore.RemoveAddresses(db, data.Name); err != nil {
-		log.Debug("Error when remove addresses for section: " + err.Error())
-		return errors.New("Error about remove associated addresses fo section")
-	}
-
 	if err = dbstore.RemoveSection(db, data.Name); err != nil {
 		log.Debug("Error when remove section: " + err.Error())
 		return errors.New("Error about remove section")

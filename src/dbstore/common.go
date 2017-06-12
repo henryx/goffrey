@@ -71,17 +71,29 @@ func IsSectionExists(db *sql.DB, section string) (bool, error) {
 }
 
 func RemoveSection(db *sql.DB, section string) error {
-	query := "DELETE FROM sections WHERE section = $1"
+	queries := []string{
+		"DELETE FROM addresses WHERE section = $1",
+		"DELETE FROM sections WHERE section = $1",
+	}
 
-	_, err := db.Exec(query, section)
+	tx, _ := db.Begin()
 
-	return err
-}
+	for _, query := range queries {
+		stmt, err := tx.Prepare(query)
 
-func RemoveAddresses(db *sql.DB, section string) error {
-	query := "DELETE FROM addresses WHERE section = $1"
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		defer stmt.Close()
 
-	_, err := db.Exec(query, section)
+		_, err = tx.Exec(query, section)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
 
-	return err
+	tx.Commit()
+	return nil
 }
