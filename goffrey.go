@@ -12,36 +12,11 @@ import (
 	"github.com/cosiner/flag"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"
-	"ip"
 	"os"
 	"os/user"
 	"path/filepath"
-	"strconv"
 	"strings"
 )
-
-func testcode(log *logging.Logger) {
-	// TODO: remove it
-	var cidr string
-
-	network := "192.168.0.0/255.255.255.252"
-	mask := strings.Split(network, "/")
-
-	netmask, err := ip.ToCidr(mask[1])
-	if err != nil {
-		log.Error("Error: " + err.Error())
-		return
-	}
-
-	cidr = strconv.Itoa(netmask)
-
-	ips, err := ip.Range(mask[0] + "/" + cidr)
-	if err != nil {
-		log.Error("Error: " + err.Error())
-	}
-
-	log.Debug(ips)
-}
 
 type Args struct {
 	Cfg        string                 `names:"-c, --cfg" usage:"Set configuration file"`
@@ -153,8 +128,6 @@ func main() {
 		level = logging.INFO
 	}
 	log := setLog(level, "")
-
-	testcode(log) // TODO: to remove
 
 	cfg = setCfg(log, args.Cfg)
 
