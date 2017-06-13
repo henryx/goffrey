@@ -104,7 +104,13 @@ func unregister(log *logging.Logger, cfg *ini.File, data actions.UnregisterData)
 }
 
 func assign(log *logging.Logger, cfg *ini.File, data actions.AssignData) {
-	// TODO implement this
+	addr, err := actions.Assign(log, cfg, data)
+	if err != nil {
+		log.Error(err.Error())
+	} else {
+		log.Infof("Address %s assigned for host %s", addr, data.Name)
+	}
+
 }
 
 func remove(log *logging.Logger, cfg *ini.File, data actions.RemoveData) {
