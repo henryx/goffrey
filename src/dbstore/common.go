@@ -9,6 +9,8 @@ package dbstore
 
 import (
 	"database/sql"
+	"ip"
+	"strconv"
 	"strings"
 )
 
@@ -34,11 +36,14 @@ func tables() []string {
 func InsertSection(db *sql.DB, section, network, netmask string) error {
 	var err error
 
-	query := "INSERT INTO sections(section, network, netmask) VALUES ($1, $2, $3)"
+	queries := []string{
+		"INSERT INTO sections(section, network, netmask) VALUES ($1, $2, $3)",
+		"INSERT INTO addresses(section, address) VALUES($1, $2)",
+	}
 
 	tx, _ := db.Begin()
 
-	stmt, err := tx.Prepare(query)
+	stmt, err := tx.Prepare(queries[0])
 	if err != nil {
 		return err
 	}
@@ -48,10 +53,35 @@ func InsertSection(db *sql.DB, section, network, netmask string) error {
 	if err != nil {
 		tx.Rollback()
 		return err
-	} else {
-		tx.Commit()
 	}
 
+	stmt2, err := tx.Prepare(queries[1])
+	if err != nil {
+		return err
+	}
+	defer stmt2.Close()
+
+	mask, err := ip.ToCidr(netmask)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	ips, err := ip.Range(network + "/" + strconv.Itoa(mask))
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	for _, ipaddr := range ips {
+		_, err = stmt2.Exec(section, ipaddr)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	tx.Commit()
 	return nil
 }
 
