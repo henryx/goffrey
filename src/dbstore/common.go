@@ -27,7 +27,7 @@ func tables() []string {
 			"CREATE TABLE addresses(",
 			"section VARCHAR(30),",
 			"address VARCHAR(15),",
-			"hostname VARCHAR(30),",
+			"hostname VARCHAR(255),",
 			"assigned TIMESTAMP)",
 		}, " "),
 	}
