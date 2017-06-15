@@ -48,8 +48,8 @@ func ToCidr(mask string) (int, error) {
 
 }
 
-func Range(cidr string) ([]string, error) {
-	ip, ipnet, err := net.ParseCIDR(cidr)
+func Range(network string, cidr int) ([]string, error) {
+	ip, ipnet, err := net.ParseCIDR(network + "/" + strconv.Itoa(cidr))
 	if err != nil {
 		return nil, err
 	}

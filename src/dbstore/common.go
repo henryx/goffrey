@@ -10,7 +10,6 @@ package dbstore
 import (
 	"database/sql"
 	"ip"
-	"strconv"
 	"strings"
 )
 
@@ -67,7 +66,7 @@ func InsertSection(db *sql.DB, section, network, netmask string) error {
 		return err
 	}
 
-	ips, err := ip.Range(network + "/" + strconv.Itoa(mask))
+	ips, err := ip.Range(network, mask)
 	if err != nil {
 		tx.Rollback()
 		return err
