@@ -8,6 +8,7 @@
 package actions
 
 import (
+	"database/sql"
 	"errors"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"
@@ -19,12 +20,20 @@ type AssignData struct {
 }
 
 func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error) {
+	var db *sql.DB
+	var err error
 	var result string
 
 	if data.Name == "" {
 		log.Debug("Section name is empty")
 		return nil, errors.New("No section name passed")
 	}
+
+	db, err = openDb(log, cfg)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
 
 	// TODO: implement this
 
