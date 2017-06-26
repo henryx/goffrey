@@ -26,12 +26,12 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 
 	if data.Name == "" {
 		log.Debug("Section name is empty")
-		return nil, errors.New("No section name passed")
+		return "", errors.New("No section name passed")
 	}
 
 	db, err = openDb(log, cfg)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	defer db.Close()
 
