@@ -8,8 +8,9 @@
 package actions
 
 import (
-	"github.com/op/go-logging"
+	"errors"
 	"github.com/go-ini/ini"
+	"github.com/op/go-logging"
 )
 
 type AssignData struct {
@@ -19,6 +20,11 @@ type AssignData struct {
 
 func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error) {
 	var result string
+
+	if data.Name == "" {
+		log.Debug("Section name is empty")
+		return nil, errors.New("No section name passed")
+	}
 
 	// TODO: implement this
 
