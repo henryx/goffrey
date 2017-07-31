@@ -13,6 +13,12 @@ import (
 	"strconv"
 )
 
+func isMySQLExists(db *sql.DB) bool {
+	// TODO: implement check
+
+	return true
+}
+
 func OpenMySQL(host string, port int, user string, password string, database string) (*sql.DB, error) {
 
 	dsn := user + ":" + password + "@tcp(" + host + ":" + strconv.Itoa(port) + ")/" + database
@@ -20,6 +26,10 @@ func OpenMySQL(host string, port int, user string, password string, database str
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
+	}
+
+	if !isMySQLExists(db) {
+
 	}
 
 	return db, nil
