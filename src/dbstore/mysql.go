@@ -7,9 +7,20 @@
 
 package dbstore
 
-import "database/sql"
+import (
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"strconv"
+)
 
 func OpenMySQL(host string, port int, user string, password string, database string) (*sql.DB, error) {
-	// TODO: implement MySQL database connection
-	return nil, nil
+
+	dsn := user + ":" + password + "@tcp(" + host + ":" + strconv.Itoa(port) + ")/" + database
+
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
