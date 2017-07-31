@@ -60,6 +60,17 @@ func openPg(sect *ini.Section) (*sql.DB, error) {
 }
 
 func openMySQL(sect *ini.Section) (*sql.DB, error) {
-	// TODO: implement MySQL database connection
-	return nil, nil
+	dbhost := sect.Key("host").String()
+	dbport, err := sect.Key("port").Int()
+	if err != nil {
+		return nil, errors.New("Invalid MySQL port: " + err.Error())
+	}
+
+	dbuser := sect.Key("user").String()
+	dbpassword := sect.Key("password").String()
+	dbdatabase := sect.Key("database").String()
+
+	db, err := dbstore.OpenMySQL(dbhost, dbport, dbuser, dbpassword, dbdatabase)
+
+	return db, err
 }
