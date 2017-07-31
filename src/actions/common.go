@@ -27,6 +27,9 @@ func openDb(log *logging.Logger, cfg *ini.File) (*sql.DB, error) {
 	case "postgres":
 		sect := cfg.Section("postgres")
 		db, err = openPg(sect)
+	case "mysql":
+		sect := cfg.Section("mysql")
+		db, err = openMySQL(sect)
 	default:
 		log.Debug("Database specified: " + dbtype)
 		return nil, errors.New("Database not supported")
@@ -54,4 +57,9 @@ func openPg(sect *ini.Section) (*sql.DB, error) {
 	db, err := dbstore.OpenPostgres(dbhost, dbport, dbuser, dbpassword, dbdatabase)
 
 	return db, err
+}
+
+func openMySQL(sect *ini.Section) (*sql.DB, error) {
+	// TODO: implement MySQL database connection
+	return nil, nil
 }
