@@ -10,11 +10,27 @@ package dbstore
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 	"strconv"
 )
 
-func isMySQLExists(db *sql.DB) bool {
-	// TODO: implement check
+func isMySQLExists(db *sql.DB, dbname string) bool {
+	var counted int
+
+	query := "SELECT Count(*) FROM information_schema.tables " +
+		"WHERE table_schema = ? " +
+		"AND table_name IN ('status', 'attrs', 'acls')"
+
+	err := db.QueryRow(query, dbname).Scan(&counted)
+	if err != nil {
+		log.Fatal("Schema 1: Error in check database structure: " + err.Error())
+	}
+
+	if counted > 0 {
+		return true
+	} else {
+		return false
+	}
 
 	return true
 }
@@ -28,7 +44,7 @@ func OpenMySQL(host string, port int, user string, password string, database str
 		return nil, err
 	}
 
-	if !isMySQLExists(db) {
+	if !isMySQLExists(db, database) {
 
 	}
 
