@@ -35,6 +35,21 @@ func isMySQLExists(db *sql.DB, dbname string) bool {
 	return true
 }
 
+func createMySQLdb(db *sql.DB) {
+	var tx *sql.Tx
+
+	tx, _ = db.Begin()
+	for _, query := range tables() {
+		_, err := tx.Exec(query)
+		if err != nil {
+			tx.Rollback()
+			log.Fatal(err)
+			break
+		}
+	}
+	tx.Commit()
+}
+
 func OpenMySQL(host string, port int, user string, password string, database string) (*sql.DB, error) {
 
 	dsn := user + ":" + password + "@tcp(" + host + ":" + strconv.Itoa(port) + ")/" + database
@@ -45,7 +60,7 @@ func OpenMySQL(host string, port int, user string, password string, database str
 	}
 
 	if !isMySQLExists(db, database) {
-
+		createMySQLdb(db)
 	}
 
 	return db, nil
