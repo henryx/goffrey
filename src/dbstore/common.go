@@ -14,8 +14,9 @@ import (
 	"strings"
 )
 
-func tables() []string {
-	return []string{
+func createDb(db *sql.DB) {
+	var tx *sql.Tx
+	var tables = []string{
 		strings.Join([]string{
 			"CREATE TABLE sections(",
 			"section VARCHAR(30),",
@@ -31,13 +32,9 @@ func tables() []string {
 			"assigned TIMESTAMP)",
 		}, " "),
 	}
-}
-
-func createDb(db *sql.DB) {
-	var tx *sql.Tx
 
 	tx, _ = db.Begin()
-	for _, query := range tables() {
+	for _, query := range tables {
 		_, err := tx.Exec(query)
 		if err != nil {
 			tx.Rollback()
