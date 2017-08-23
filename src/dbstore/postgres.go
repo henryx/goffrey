@@ -34,21 +34,6 @@ func isPgDbExists(db *sql.DB) bool {
 	}
 }
 
-func createPgDb(db *sql.DB) {
-	var tx *sql.Tx
-
-	tx, _ = db.Begin()
-	for _, query := range tables() {
-		_, err := tx.Exec(query)
-		if err != nil {
-			tx.Rollback()
-			log.Fatal(err)
-			break
-		}
-	}
-	tx.Commit()
-}
-
 func OpenPostgres(host string, port int, user string, password string, database string) (*sql.DB, error) {
 	dsn := strings.Join([]string{
 		"user=" + user,
@@ -65,7 +50,7 @@ func OpenPostgres(host string, port int, user string, password string, database 
 	}
 
 	if !isPgDbExists(db) {
-		createPgDb(db)
+		createDb(db)
 	}
 
 	return db, nil

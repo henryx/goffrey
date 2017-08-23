@@ -28,21 +28,6 @@ func isSQLiteDbExist(db *sql.DB) bool {
 	}
 }
 
-func createSQLiteDb(db *sql.DB) {
-	var tx *sql.Tx
-
-	tx, _ = db.Begin()
-	for _, query := range tables() {
-		_, err := tx.Exec(query)
-		if err != nil {
-			tx.Rollback()
-			log.Fatal(err)
-			break
-		}
-	}
-	tx.Commit()
-}
-
 func OpenSQLite(location string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", location)
 	if err != nil {
@@ -50,7 +35,7 @@ func OpenSQLite(location string) (*sql.DB, error) {
 	}
 
 	if !isSQLiteDbExist(db) {
-		createSQLiteDb(db)
+		createDb(db)
 	}
 	return db, nil
 }

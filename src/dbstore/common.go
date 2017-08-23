@@ -10,6 +10,7 @@ package dbstore
 import (
 	"database/sql"
 	"ip"
+	"log"
 	"strings"
 )
 
@@ -30,6 +31,21 @@ func tables() []string {
 			"assigned TIMESTAMP)",
 		}, " "),
 	}
+}
+
+func createDb(db *sql.DB) {
+	var tx *sql.Tx
+
+	tx, _ = db.Begin()
+	for _, query := range tables() {
+		_, err := tx.Exec(query)
+		if err != nil {
+			tx.Rollback()
+			log.Fatal(err)
+			break
+		}
+	}
+	tx.Commit()
 }
 
 func InsertSection(db *sql.DB, section, network, netmask string) error {
