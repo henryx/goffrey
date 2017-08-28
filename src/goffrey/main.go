@@ -8,7 +8,7 @@
 package main
 
 import (
-	"actions"
+	"goffrey/actions"
 	"github.com/cosiner/flag"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"

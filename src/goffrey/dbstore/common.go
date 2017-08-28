@@ -9,7 +9,7 @@ package dbstore
 
 import (
 	"database/sql"
-	"ip"
+	"goffrey/ip"
 	"log"
 	"strings"
 )

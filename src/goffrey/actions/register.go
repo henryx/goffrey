@@ -9,7 +9,7 @@ package actions
 
 import (
 	"database/sql"
-	"dbstore"
+	"goffrey/dbstore"
 	"errors"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"
