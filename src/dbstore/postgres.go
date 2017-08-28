@@ -20,7 +20,7 @@ func isPgDbExists(db *sql.DB) bool {
 
 	query := "SELECT Count(*) FROM information_schema.tables " +
 		"WHERE table_schema = 'public' " +
-		"AND table_name in ('status', 'attrs', 'acls')"
+		"AND table_name in ('sections, 'addresses')"
 
 	err := db.QueryRow(query).Scan(&counted)
 	if err != nil {
