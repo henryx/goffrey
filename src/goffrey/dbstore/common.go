@@ -12,6 +12,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func createDb(db *sql.DB) {
