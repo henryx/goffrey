@@ -45,27 +45,6 @@ func createDb(db *sql.DB) {
 	tx.Commit()
 }
 
-func isMySQLExists(db *sql.DB, dbname string) bool {
-	var counted int
-
-	query := "SELECT Count(*) FROM information_schema.tables " +
-		"WHERE table_schema = ? " +
-		"AND table_name IN ('sections', 'addresses')"
-
-	err := db.QueryRow(query, dbname).Scan(&counted)
-	if err != nil {
-		log.Fatal("Schema 1: Error in check database structure: " + err.Error())
-	}
-
-	if counted > 0 {
-		return true
-	} else {
-		return false
-	}
-
-	return true
-}
-
 func OpenMySQL(host string, port int, user string, password string, database string) (*sql.DB, error) {
 
 	dsn := user + ":" + password + "@tcp(" + host + ":" + strconv.Itoa(port) + ")/" + database
@@ -80,19 +59,4 @@ func OpenMySQL(host string, port int, user string, password string, database str
 	}
 
 	return db, nil
-}
-
-func IsSectionExists(db *sql.DB, section string) (bool, error) {
-	var counted int
-
-	query := "SELECT count(*) FROM sections WHERE section = ?"
-	if err := db.QueryRow(query, section).Scan(&counted); err != nil {
-		return false, err
-	}
-
-	if counted > 0 {
-		return true, nil
-	} else {
-		return false, nil
-	}
 }
