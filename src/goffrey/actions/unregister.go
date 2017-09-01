@@ -9,10 +9,10 @@ package actions
 
 import (
 	"database/sql"
-	"goffrey/dbstore"
 	"errors"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"
+	"goffrey/dbstore"
 )
 
 type UnregisterData struct {
@@ -29,7 +29,7 @@ func Unregister(log *logging.Logger, cfg *ini.File, data UnregisterData) error {
 		return errors.New("No section name passed")
 	}
 
-	db, err = openDb(log, cfg)
+	db, err = openDb(cfg)
 	if err != nil {
 		return err
 	}

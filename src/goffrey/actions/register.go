@@ -9,10 +9,10 @@ package actions
 
 import (
 	"database/sql"
-	"goffrey/dbstore"
 	"errors"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"
+	"goffrey/dbstore"
 )
 
 type RegisterData struct {
@@ -31,7 +31,7 @@ func Register(log *logging.Logger, cfg *ini.File, data RegisterData) error {
 		return errors.New("No section name passed")
 	}
 
-	db, err = openDb(log, cfg)
+	db, err = openDb(cfg)
 	if err != nil {
 		return err
 	}
@@ -41,13 +41,13 @@ func Register(log *logging.Logger, cfg *ini.File, data RegisterData) error {
 	if exists {
 		return errors.New("Section " + data.Name + " already exists")
 	} else if err != nil {
-		log.Debug("Error in check section: "+err.Error())
+		log.Debug("Error in check section: " + err.Error())
 		return errors.New("Error about checking section")
 	}
 
 	err = dbstore.InsertSection(db, data.Name, data.Network, data.Netmask)
 	if err != nil {
-		log.Debug("Error when insert section: "+err.Error())
+		log.Debug("Error when insert section: " + err.Error())
 		return errors.New("Error about insert section")
 	} else {
 		return nil

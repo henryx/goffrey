@@ -29,7 +29,7 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 		return "", errors.New("No section name passed")
 	}
 
-	db, err = openDb(log, cfg)
+	db, err = openDb(cfg)
 	if err != nil {
 		return "", err
 	}
