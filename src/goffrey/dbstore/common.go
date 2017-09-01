@@ -11,6 +11,7 @@ import (
 	"database/sql"
 	"goffrey/ip"
 	"log"
+	"strconv"
 	"strings"
 )
 
@@ -43,6 +44,43 @@ func createDb(db *sql.DB) {
 		}
 	}
 	tx.Commit()
+}
+
+func isMySQLExists(db *sql.DB, dbname string) bool {
+	var counted int
+
+	query := "SELECT Count(*) FROM information_schema.tables " +
+		"WHERE table_schema = ? " +
+		"AND table_name IN ('sections', 'addresses')"
+
+	err := db.QueryRow(query, dbname).Scan(&counted)
+	if err != nil {
+		log.Fatal("Schema 1: Error in check database structure: " + err.Error())
+	}
+
+	if counted > 0 {
+		return true
+	} else {
+		return false
+	}
+
+	return true
+}
+
+func OpenMySQL(host string, port int, user string, password string, database string) (*sql.DB, error) {
+
+	dsn := user + ":" + password + "@tcp(" + host + ":" + strconv.Itoa(port) + ")/" + database
+
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	if !isMySQLExists(db, database) {
+		createDb(db)
+	}
+
+	return db, nil
 }
 
 func InsertSection(db *sql.DB, section, network, netmask string) error {
