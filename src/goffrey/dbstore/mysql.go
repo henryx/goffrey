@@ -19,7 +19,7 @@ func isMySQLExists(db *sql.DB, dbname string) bool {
 
 	query := "SELECT Count(*) FROM information_schema.tables " +
 		"WHERE table_schema = ? " +
-		"AND table_name IN ('status', 'attrs', 'acls')"
+		"AND table_name IN ('sections', 'addresses')"
 
 	err := db.QueryRow(query, dbname).Scan(&counted)
 	if err != nil {

@@ -49,8 +49,8 @@ func InsertSection(db *sql.DB, section, network, netmask string) error {
 	var err error
 
 	queries := []string{
-		"INSERT INTO sections(section, network, netmask) VALUES ($1, $2, $3)",
-		"INSERT INTO addresses(section, address) VALUES($1, $2)",
+		"INSERT INTO sections(section, network, netmask) VALUES (?, ?, ?)",
+		"INSERT INTO addresses(section, address) VALUES(?, ?)",
 	}
 
 	tx, _ := db.Begin()
@@ -100,7 +100,7 @@ func InsertSection(db *sql.DB, section, network, netmask string) error {
 func IsSectionExists(db *sql.DB, section string) (bool, error) {
 	var counted int
 
-	query := "SELECT count(*) FROM sections WHERE section = $1"
+	query := "SELECT count(*) FROM sections WHERE section = ?"
 	if err := db.QueryRow(query, section).Scan(&counted); err != nil {
 		return false, err
 	}
@@ -114,8 +114,8 @@ func IsSectionExists(db *sql.DB, section string) (bool, error) {
 
 func RemoveSection(db *sql.DB, section string) error {
 	queries := []string{
-		"DELETE FROM addresses WHERE section = $1",
-		"DELETE FROM sections WHERE section = $1",
+		"DELETE FROM addresses WHERE section = ?",
+		"DELETE FROM sections WHERE section = ?",
 	}
 
 	tx, _ := db.Begin()
