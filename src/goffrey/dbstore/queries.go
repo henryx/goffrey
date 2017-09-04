@@ -47,3 +47,18 @@ func IsSectionExists(db *sql.DB, section string) (bool, error) {
 		return false, nil
 	}
 }
+
+func IsHostExists(db *sql.DB, section, hostname string) (bool, error) {
+	var counted int
+
+	query := "SELECT count(*) FROM addresses WHERE section = ? and hostname = ?"
+	if err := db.QueryRow(query, section, hostname).Scan(&counted); err != nil {
+		return false, err
+	}
+
+	if counted > 0 {
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
