@@ -62,3 +62,15 @@ func IsHostExists(db *sql.DB, section, hostname string) (bool, error) {
 		return false, nil
 	}
 }
+
+
+func RetrieveFreeIP(db *sql.DB, section string) (string, error) {
+	var result string
+	query := "SELECT address FROM addresses WHERE section = ? AND hostname IS NULL ORDER BY address LIMIT 1"
+
+	if err := db.QueryRow(query, section).Scan(&result); err != nil {
+		return "", err
+	}
+
+	return result, nil
+}
