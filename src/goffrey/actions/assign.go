@@ -24,7 +24,7 @@ type AssignData struct {
 func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error) {
 	var db *sql.DB
 	var err error
-	var sectexists bool
+	var sectexists, hostexists bool
 	var result string
 
 	if data.Section == "" {
@@ -43,6 +43,13 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 		return "", err
 	} else if !sectexists {
 		return "", errors.New("Section " + data.Section + " not exists")
+	}
+
+	hostexists, err = dbstore.IsHostExists(db, data.Section, data.Name)
+	if err != nil {
+		return "", err
+	} else if !hostexists {
+		return "", errors.New("Hostname " + data.Name + " already assigned")
 	}
 
 	return result, nil
