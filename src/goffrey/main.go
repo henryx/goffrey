@@ -25,7 +25,7 @@ type Args struct {
 	Register   actions.RegisterData   `usage:"Register a network"`
 	Unregister actions.UnregisterData `usage:"Unregister a network"`
 	Assign     actions.AssignData     `usage:"Associate address"`
-	Remove     actions.RemoveData     `usage:"Remove associated address"`
+	Remove     actions.ReleaseData     `usage:"Remove associated address"`
 }
 
 func setCfg(log *logging.Logger, cfg string) *ini.File {
@@ -113,7 +113,7 @@ func assign(log *logging.Logger, cfg *ini.File, data actions.AssignData) {
 
 }
 
-func remove(log *logging.Logger, cfg *ini.File, data actions.RemoveData) {
+func remove(log *logging.Logger, cfg *ini.File, data actions.ReleaseData) {
 	// TODO implement this
 }
 
