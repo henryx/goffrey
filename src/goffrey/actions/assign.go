@@ -48,7 +48,7 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 	hostexists, err = dbstore.IsHostExists(db, data.Section, data.Name)
 	if err != nil {
 		return "", err
-	} else if !hostexists {
+	} else if hostexists {
 		return "", errors.New("Hostname " + data.Name + " already assigned")
 	}
 
