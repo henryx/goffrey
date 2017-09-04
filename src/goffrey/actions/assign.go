@@ -12,6 +12,7 @@ import (
 	"errors"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"
+	"goffrey/dbstore"
 )
 
 type AssignData struct {
@@ -23,6 +24,7 @@ type AssignData struct {
 func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error) {
 	var db *sql.DB
 	var err error
+	var sectexists bool
 	var result string
 
 	if data.Section == "" {
@@ -36,7 +38,12 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 	}
 	defer db.Close()
 
-	// TODO: implement this
+	sectexists, err = dbstore.IsSectionExists(db, data.Section)
+	if err != nil {
+		return "", err
+	} else if !sectexists {
+		return "", errors.New("Section " + data.Section + " not exists")
+	}
 
 	return result, nil
 }
