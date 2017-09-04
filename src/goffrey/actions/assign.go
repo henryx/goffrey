@@ -57,7 +57,10 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 		return "", err
 	}
 
-	// TODO: Assign free IP to hostname
+	err = dbstore.AssignHost(db, data.Section, data.Name, ip)
+	if err != nil {
+		return "", err
+	}
 
 	return ip, nil
 }
