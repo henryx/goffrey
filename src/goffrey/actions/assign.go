@@ -25,7 +25,7 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 	var db *sql.DB
 	var err error
 	var sectexists, hostexists bool
-	var result string
+	var ip string
 
 	if data.Section == "" {
 		log.Debug("Section name is empty")
@@ -52,12 +52,12 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 		return "", errors.New("Hostname " + data.Name + " already assigned")
 	}
 
-	result, err = dbstore.RetrieveFreeIP(db, data.Section)
+	ip, err = dbstore.RetrieveFreeIP(db, data.Section)
 	if err != nil {
 		return "", err
 	}
 
 	// TODO: Assign free IP to hostname
 
-	return result, nil
+	return ip, nil
 }
