@@ -15,8 +15,9 @@ import (
 )
 
 type AssignData struct {
-	Enable bool
-	Name   string `names:"-n, --name" usage:"Name of the host to assign"`
+	Enable  bool
+	Section string `names:"-s --section" usage:"Define the section to assign"`
+	Name    string `names:"-n, --name" usage:"Name of the host to assign"`
 }
 
 func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error) {
@@ -24,7 +25,7 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 	var err error
 	var result string
 
-	if data.Name == "" {
+	if data.Section == "" {
 		log.Debug("Section name is empty")
 		return "", errors.New("No section name passed")
 	}
