@@ -113,7 +113,7 @@ func assign(log *logging.Logger, cfg *ini.File, data actions.AssignData) {
 
 }
 
-func remove(log *logging.Logger, cfg *ini.File, data actions.ReleaseData) {
+func release(log *logging.Logger, cfg *ini.File, data actions.ReleaseData) {
 	// TODO implement this
 }
 
@@ -144,7 +144,7 @@ func main() {
 	} else if args.Assign.Enable {
 		assign(log, cfg, args.Assign)
 	} else if args.Release.Enable {
-		remove(log, cfg, args.Release)
+		release(log, cfg, args.Release)
 	} else {
 		log.Error("No action passed")
 		set.Help(false)
