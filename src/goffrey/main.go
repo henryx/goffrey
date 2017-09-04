@@ -8,10 +8,10 @@
 package main
 
 import (
-	"goffrey/actions"
 	"github.com/cosiner/flag"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"
+	"goffrey/actions"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -25,7 +25,7 @@ type Args struct {
 	Register   actions.RegisterData   `usage:"Register a network"`
 	Unregister actions.UnregisterData `usage:"Unregister a network"`
 	Assign     actions.AssignData     `usage:"Associate address"`
-	Remove     actions.ReleaseData     `usage:"Remove associated address"`
+	Release    actions.ReleaseData    `usage:"Release associated address"`
 }
 
 func setCfg(log *logging.Logger, cfg string) *ini.File {
@@ -143,8 +143,8 @@ func main() {
 		unregister(log, cfg, args.Unregister)
 	} else if args.Assign.Enable {
 		assign(log, cfg, args.Assign)
-	} else if args.Remove.Enable {
-		remove(log, cfg, args.Remove)
+	} else if args.Release.Enable {
+		remove(log, cfg, args.Release)
 	} else {
 		log.Error("No action passed")
 		set.Help(false)
