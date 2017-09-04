@@ -9,5 +9,5 @@ package actions
 
 type ReleaseData struct {
 	Enable bool
-	Name   string `names:"-n, --name" usage:"Name of the host to remove"`
+	Name   string `names:"-n, --name" usage:"Name of the host to release"`
 }
