@@ -91,3 +91,8 @@ func RemoveSection(db *sql.DB, section string) error {
 	tx.Commit()
 	return nil
 }
+
+func AssignHost(db *sql.DB, section, hostname, ip string) error {
+	//TODO: write update for assign host to IP
+	return nil
+}
