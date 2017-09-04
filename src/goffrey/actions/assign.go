@@ -52,5 +52,12 @@ func Assign(log *logging.Logger, cfg *ini.File, data AssignData) (string, error)
 		return "", errors.New("Hostname " + data.Name + " already assigned")
 	}
 
+	result, err = dbstore.RetrieveFreeIP(db, data.Section)
+	if err != nil {
+		return "", err
+	}
+
+	// TODO: Assign free IP to hostname
+
 	return result, nil
 }
