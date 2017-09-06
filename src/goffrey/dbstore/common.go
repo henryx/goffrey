@@ -9,10 +9,10 @@ package dbstore
 
 import (
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"strconv"
 	"strings"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func createDb(db *sql.DB) {
@@ -34,8 +34,23 @@ func createDb(db *sql.DB) {
 		}, " "),
 	}
 
+	var indexes = []string{
+		"CREATE INDEX idx_addresses_1 ON addresses(section, hostname)",
+		"CREATE INDEX idx_addresses_2 ON addresses(section, address)",
+	}
+
 	tx, _ = db.Begin()
 	for _, query := range tables {
+		_, err := tx.Exec(query)
+		if err != nil {
+			tx.Rollback()
+			log.Fatal(err)
+			break
+		}
+	}
+	tx.Commit()
+
+	for _, query := range indexes {
 		_, err := tx.Exec(query)
 		if err != nil {
 			tx.Rollback()
