@@ -9,5 +9,6 @@ package actions
 
 type ReleaseData struct {
 	Enable bool
+	Section string `names:"-s, --section" usage:"Define the section to assign"`
 	Name   string `names:"-n, --name" usage:"Name of the host to release"`
 }
