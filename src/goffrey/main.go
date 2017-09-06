@@ -114,7 +114,12 @@ func assign(log *logging.Logger, cfg *ini.File, data actions.AssignData) {
 }
 
 func release(log *logging.Logger, cfg *ini.File, data actions.ReleaseData) {
-	// TODO implement this
+	addr, err := actions.Release(log, cfg, data)
+	if err != nil {
+		log.Error(err.Error())
+	} else {
+		log.Infof("Address %s released for host %s", addr, data.Name)
+	}
 }
 
 func main() {
