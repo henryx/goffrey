@@ -93,6 +93,23 @@ func RemoveSection(db *sql.DB, section string) error {
 }
 
 func AssignHost(db *sql.DB, section, hostname, ip string) error {
-	//TODO: write update for assign host to IP
+	update := "UPDATE addresses SET hostname = ?, assigned = CURRENT_TIMESTAMP WHERE section = ? AND address = ?"
+
+	tx, _ := db.Begin()
+
+	stmt, err := tx.Prepare(update)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = tx.Exec(update, hostname, section, ip)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
 	return nil
 }
