@@ -16,6 +16,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"strings"
+	"fmt"
 )
 
 type Args struct {
@@ -26,6 +27,7 @@ type Args struct {
 	Unregister actions.UnregisterData `usage:"Unregister a network"`
 	Assign     actions.AssignData     `usage:"Associate address"`
 	Release    actions.ReleaseData    `usage:"Release associated address"`
+	Get        actions.GetData        `usage:"Get associated address"`
 }
 
 func setCfg(log *logging.Logger, cfg string) *ini.File {
@@ -122,6 +124,15 @@ func release(log *logging.Logger, cfg *ini.File, data actions.ReleaseData) {
 	}
 }
 
+func get(log *logging.Logger, cfg *ini.File, data actions.GetData) {
+	addr, err := actions.Get(log, cfg, data)
+	if err != nil {
+		log.Error(err.Error())
+	} else {
+		fmt.Printf("%s - %s\n", data.Section, addr)
+	}
+}
+
 func main() {
 	var args Args
 	var cfg *ini.File
@@ -150,6 +161,8 @@ func main() {
 		assign(log, cfg, args.Assign)
 	} else if args.Release.Enable {
 		release(log, cfg, args.Release)
+	} else if args.Get.Enable {
+		get(log, cfg, args.Get)
 	} else {
 		log.Error("No action passed")
 		set.Help(false)
