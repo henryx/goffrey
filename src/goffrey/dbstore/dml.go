@@ -92,7 +92,7 @@ func RemoveSection(db *sql.DB, section string) error {
 	return nil
 }
 
-func AssignHost(db *sql.DB, section, hostname, ip string) error {
+func AssignHost(db *sql.DB, section, hostname, ipaddr string) error {
 	update := "UPDATE addresses SET hostname = ?, assigned = CURRENT_TIMESTAMP WHERE section = ? AND address = ?"
 
 	tx, _ := db.Begin()
@@ -104,7 +104,7 @@ func AssignHost(db *sql.DB, section, hostname, ip string) error {
 	}
 	defer stmt.Close()
 
-	_, err = tx.Exec(update, hostname, section, ip)
+	_, err = tx.Exec(update, hostname, section, ipaddr)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -114,7 +114,7 @@ func AssignHost(db *sql.DB, section, hostname, ip string) error {
 	return nil
 }
 
-func GetHost(db *sql.DB, section, ip string) (string, error) {
+func GetHost(db *sql.DB, section, ipaddr string) (string, error) {
 	var count int
 	var host string
 	var err error
@@ -122,7 +122,7 @@ func GetHost(db *sql.DB, section, ip string) (string, error) {
 	counted := "SELECT count(hostname) FROM addresses WHERE section = ? AND address = ?"
 	query := "SELECT hostname FROM addresses WHERE section = ? AND address = ?"
 
-	err = db.QueryRow(counted, section, ip).Scan(&count)
+	err = db.QueryRow(counted, section, ipaddr).Scan(&count)
 	if err != nil {
 		return "", err
 	}
@@ -131,7 +131,7 @@ func GetHost(db *sql.DB, section, ip string) (string, error) {
 		return "", nil
 	}
 
-	err = db.QueryRow(query, section, ip).Scan(&host)
+	err = db.QueryRow(query, section, ipaddr).Scan(&host)
 	if err != nil {
 		return "", err
 	}
