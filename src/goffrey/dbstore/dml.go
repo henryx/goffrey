@@ -115,10 +115,21 @@ func AssignHost(db *sql.DB, section, hostname, ip string) error {
 }
 
 func GetHost(db *sql.DB, section, ip string) (string, error) {
+	var count int
 	var host string
 	var err error
 
+	counted := "SELECT count(hostname) FROM addresses WHERE section = ? AND address = ?"
 	query := "SELECT hostname FROM addresses WHERE section = ? AND address = ?"
+
+	err = db.QueryRow(counted, section, ip).Scan(&count)
+	if err != nil {
+		return "", err
+	}
+
+	if count == 0 {
+		return "", nil
+	}
 
 	err = db.QueryRow(query, section, ip).Scan(&host)
 	if err != nil {
@@ -129,10 +140,21 @@ func GetHost(db *sql.DB, section, ip string) (string, error) {
 }
 
 func GetIP(db *sql.DB, section, hostname string) (string, error) {
+	var count int
 	var ipaddr string
 	var err error
 
+	counted := "SELECT count(address) FROM addresses WHERE section = ? AND hostname = ?"
 	query := "SELECT address FROM addresses WHERE section = ? AND hostname = ?"
+
+	err = db.QueryRow(counted, section, hostname).Scan(&count)
+	if err != nil {
+		return "", err
+	}
+
+	if count == 0 {
+		return "", nil
+	}
 
 	err = db.QueryRow(query, section, hostname).Scan(&ipaddr)
 	if err != nil {
