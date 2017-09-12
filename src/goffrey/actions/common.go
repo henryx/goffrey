@@ -28,3 +28,19 @@ func openDb(cfg *ini.File) (*sql.DB, error) {
 
 	return db, err
 }
+
+func checkHost(db *sql.DB, section, host string) bool {
+	var hostexists bool
+	var err error
+
+	hostexists, err = dbstore.IsHostExists(db, section, host)
+	if err != nil {
+		return false
+	}
+
+	if hostexists {
+		return true
+	} else {
+		return false
+	}
+}
