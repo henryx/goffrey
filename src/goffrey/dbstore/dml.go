@@ -118,7 +118,7 @@ func GetHost(db *sql.DB, section, ip string) (string, error) {
 	var host string
 	var err error
 
-	query := "SELECT hostname FROM addresses WHERE section = ? AND ip = ?"
+	query := "SELECT hostname FROM addresses WHERE section = ? AND address = ?"
 
 	err = db.QueryRow(query, section, ip).Scan(&host)
 	if err != nil {
@@ -132,7 +132,7 @@ func GetIP(db *sql.DB, section, hostname string) (string, error) {
 	var ip string
 	var err error
 
-	query := "SELECT ip FROM addresses WHERE section = ? AND hostname = ?"
+	query := "SELECT address FROM addresses WHERE section = ? AND hostname = ?"
 
 	err = db.QueryRow(query, section, hostname).Scan(&ip)
 	if err != nil {
