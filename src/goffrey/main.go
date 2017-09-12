@@ -129,7 +129,7 @@ func get(log *logging.Logger, cfg *ini.File, data actions.GetData) {
 	if err != nil {
 		log.Error(err.Error())
 	} else {
-		fmt.Printf("%s - %s\n", data.Name, addr)
+		fmt.Printf("%s - %s\n", data.Address, addr)
 	}
 }
 
