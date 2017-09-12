@@ -113,3 +113,17 @@ func AssignHost(db *sql.DB, section, hostname, ip string) error {
 	tx.Commit()
 	return nil
 }
+
+func GetHost(db *sql.DB, section, ip string) (string, error) {
+	var host string
+	var err error
+
+	query := "SELECT hostname FROM addresses WHERE section = ? AND ip = ?"
+
+	err = db.QueryRow(query, section, ip).Scan(&host)
+	if err != nil {
+		return "", err
+	}
+
+	return host, nil
+}
