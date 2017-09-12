@@ -19,6 +19,7 @@ type GetData struct {
 	Enable  bool
 	Section string `names:"-s, --section" usage:"Define the section to get"`
 	Address string `names:"-a, --address" usage:"Address to get"`
+	Rev     bool   `names:"-R, --rev" usage:"Reverse lookup" default:"false"`
 }
 
 func Get(log *logging.Logger, cfg *ini.File, data GetData) (string, error) {
@@ -38,14 +39,25 @@ func Get(log *logging.Logger, cfg *ini.File, data GetData) (string, error) {
 	}
 	defer db.Close()
 
-	hostexists = checkHost(db, data.Section, data.Address)
-	if !hostexists {
-		return "", errors.New("Address " + data.Address + " not exists")
-	}
+	if !data.Rev {
+		hostexists = checkHost(db, data.Section, data.Address)
+		if !hostexists {
+			return "", errors.New("Address " + data.Address + " not exists")
+		}
 
-	result, err = dbstore.GetIP(db, data.Section, data.Address)
-	if err != nil {
-		return "", err
+		result, err = dbstore.GetIP(db, data.Section, data.Address)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		result, err = dbstore.GetHost(db, data.Section, data.Address)
+		if err != nil {
+			return "", err
+		}
+
+		if result == "" {
+			return "", errors.New("Address has not associated hostname")
+		}
 	}
 
 	return result, nil
