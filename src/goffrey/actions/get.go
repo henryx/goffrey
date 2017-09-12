@@ -8,8 +8,11 @@
 package actions
 
 import (
-	"github.com/op/go-logging"
+	"database/sql"
+	"errors"
 	"github.com/go-ini/ini"
+	"github.com/op/go-logging"
+	"goffrey/dbstore"
 )
 
 type GetData struct {
@@ -19,7 +22,31 @@ type GetData struct {
 }
 
 func Get(log *logging.Logger, cfg *ini.File, data GetData) (string, error) {
-	// TODO implement function
+	var db *sql.DB
+	var hostexists bool
+	var result string
+	var err error
 
-	return "", nil
+	if data.Name == "" {
+		log.Debug("Section name is empty")
+		return "", errors.New("No section name passed")
+	}
+
+	db, err = openDb(cfg)
+	if err != nil {
+		return "", err
+	}
+	defer db.Close()
+
+	hostexists = checkHost(db, data.Section, data.Name)
+	if !hostexists {
+		return "", errors.New("Hostname " + data.Name + " not exists")
+	}
+
+	result, err = dbstore.GetIP(db, data.Section, data.Name)
+	if err != nil {
+		return "", err
+	}
+
+	return result, nil
 }
