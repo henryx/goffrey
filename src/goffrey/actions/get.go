@@ -18,7 +18,7 @@ import (
 type GetData struct {
 	Enable  bool
 	Section string `names:"-s, --section" usage:"Define the section to get"`
-	Name    string `names:"-n, --name" usage:"Name of the host to get"`
+	Address string `names:"-a, --address" usage:"Address to get"`
 }
 
 func Get(log *logging.Logger, cfg *ini.File, data GetData) (string, error) {
@@ -27,7 +27,7 @@ func Get(log *logging.Logger, cfg *ini.File, data GetData) (string, error) {
 	var result string
 	var err error
 
-	if data.Name == "" {
+	if data.Address == "" {
 		log.Debug("Section name is empty")
 		return "", errors.New("No section name passed")
 	}
@@ -38,12 +38,12 @@ func Get(log *logging.Logger, cfg *ini.File, data GetData) (string, error) {
 	}
 	defer db.Close()
 
-	hostexists = checkHost(db, data.Section, data.Name)
+	hostexists = checkHost(db, data.Section, data.Address)
 	if !hostexists {
-		return "", errors.New("Hostname " + data.Name + " not exists")
+		return "", errors.New("Address " + data.Address + " not exists")
 	}
 
-	result, err = dbstore.GetIP(db, data.Section, data.Name)
+	result, err = dbstore.GetIP(db, data.Section, data.Address)
 	if err != nil {
 		return "", err
 	}
