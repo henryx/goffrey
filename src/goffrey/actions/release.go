@@ -8,8 +8,11 @@
 package actions
 
 import (
+	"database/sql"
+	"errors"
 	"github.com/go-ini/ini"
 	"github.com/op/go-logging"
+	"goffrey/dbstore"
 )
 
 type ReleaseData struct {
@@ -19,7 +22,29 @@ type ReleaseData struct {
 }
 
 func Release(log *logging.Logger, cfg *ini.File, data ReleaseData) (string, error) {
-	// TODO: implement function
+	var sectexists bool
+	var db *sql.DB
+	var err error
+
+	if data.Section == "" {
+		log.Debug("Section name is empty")
+		return "", errors.New("No section name passed")
+	}
+
+	db, err = openDb(cfg)
+	if err != nil {
+		return "", err
+	}
+	defer db.Close()
+
+	sectexists, err = dbstore.IsSectionExists(db, data.Section)
+	if err != nil {
+		return "", err
+	} else if !sectexists {
+		return "", errors.New("Section " + data.Section + " not exists")
+	}
+
+	// TODO release host
 
 	return "", nil
 }
