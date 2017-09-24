@@ -163,3 +163,25 @@ func GetIP(db *sql.DB, section, hostname string) (string, error) {
 
 	return ipaddr, nil
 }
+
+func ReleaseHost(db *sql.DB, section, ipaddr string) error {
+	update := "UPDATE addresses SET hostname = NULL, assigned = NULL WHERE section = ? AND address = ?"
+
+	tx, _ := db.Begin()
+
+	stmt, err := tx.Prepare(update)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = tx.Exec(update, section, ipaddr)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
+	return nil
+}
