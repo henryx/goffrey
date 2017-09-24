@@ -44,7 +44,15 @@ func Release(log *logging.Logger, cfg *ini.File, data ReleaseData) (string, erro
 		return "", errors.New("Section " + data.Section + " not exists")
 	}
 
-	// TODO release host
+	ip, err := dbstore.GetIP(db, data.Section, data.Name)
+	if err != nil {
+		return "", err
+	}
 
-	return "", nil
+	err = dbstore.ReleaseHost(db, data.Section, ip)
+	if err != nil {
+		return "", err
+	}
+
+	return ip, nil
 }
