@@ -31,19 +31,21 @@ type Args struct {
 }
 
 func setCfg(log *logging.Logger, cfg string) *ini.File {
-	var filename string
+	var filename, homefile, systemfile string
 	var res *ini.File
 	var err error
 
 	uid, _ := user.Current()
+	homefile = uid.HomeDir + string(filepath.Separator) + ".goffreyrc"
+	systemfile = string(filepath.Separator) + "etc" + string(filepath.Separator) + "goffrey.cfg"
 
 	if cfg != "" {
 		filename = cfg
 	} else {
-		if _, err := os.Stat(uid.HomeDir + string(filepath.Separator) + ".goffreyrc"); os.IsNotExist(err) {
-			filename = string(filepath.Separator) + "etc" + string(filepath.Separator) + "goffrey.cfg"
+		if _, err := os.Stat(homefile); os.IsNotExist(err) {
+			filename = systemfile
 		} else {
-			filename = uid.HomeDir + string(filepath.Separator) + ".goffreyrc"
+			filename = homefile
 		}
 	}
 
