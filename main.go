@@ -50,7 +50,12 @@ func setCfg(log *logging.Logger, cfg string) *ini.File {
 		filename = cfg
 	} else {
 		if _, err := os.Stat(homefile); os.IsNotExist(err) {
-			filename = systemfile
+			if _, err := os.Stat(systemfile); os.IsNotExist(err) {
+				log.Error("Configuration file does not exist in " + systemfile + " or " + homefile)
+				os.Exit(1)
+			} else {
+				filename = systemfile
+			}
 		} else {
 			filename = homefile
 		}
