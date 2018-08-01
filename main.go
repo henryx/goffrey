@@ -8,15 +8,17 @@
 package main
 
 import (
-	"github.com/cosiner/flag"
-	"github.com/go-ini/ini"
-	"github.com/op/go-logging"
+	"fmt"
 	"goffrey/actions"
 	"os"
 	"os/user"
 	"path/filepath"
+	"runtime"
 	"strings"
-	"fmt"
+
+	"github.com/cosiner/flag"
+	"github.com/go-ini/ini"
+	"github.com/op/go-logging"
 )
 
 type Args struct {
@@ -37,7 +39,12 @@ func setCfg(log *logging.Logger, cfg string) *ini.File {
 
 	uid, _ := user.Current()
 	homefile = uid.HomeDir + string(filepath.Separator) + ".goffreyrc"
-	systemfile = string(filepath.Separator) + "etc" + string(filepath.Separator) + "goffrey.cfg"
+
+	if runtime.GOOS == "windows" {
+		systemfile = os.Getenv("ProgramData") + string(filepath.Separator) + "goffrey" + string(filepath.Separator) + "goffrey.cfg"
+	} else {
+		systemfile = string(filepath.Separator) + "etc" + string(filepath.Separator) + "goffrey.cfg"
+	}
 
 	if cfg != "" {
 		filename = cfg
